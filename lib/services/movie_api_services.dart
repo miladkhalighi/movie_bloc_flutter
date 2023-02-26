@@ -127,7 +127,7 @@ class MovieApiServices {
   Future<List<Movie>> getTopRatedMovies() async {
     final dio = Dio();
     //https://api.themoviedb.org/3/movie/top_rated?api_key=API_KEY
-    String url = MovieApiConstants.baseUrl + MovieApiConstants.mostPopularPath;
+    String url = MovieApiConstants.baseUrl + MovieApiConstants.topRatedPath;
     try {
       final response = await dio.get(
         url,
