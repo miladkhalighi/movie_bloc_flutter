@@ -5,35 +5,39 @@ enum CastStatus { initial, loading, loaded, error }
 
 class CastMoviesState {
   final CastStatus status;
-  final Cast cast;
+  final List<Cast> cast;
   CastMoviesState({
     required this.status,
     required this.cast,
   });
 
   factory CastMoviesState.initial() =>
-      CastMoviesState(status: CastStatus.initial, cast: Cast.initial());
+      CastMoviesState(status: CastStatus.initial, cast: []);
+
+
 
   @override
   bool operator ==(covariant CastMoviesState other) {
     if (identical(this, other)) return true;
-
-    return other.status == status && other.cast == cast;
+  
+    return 
+      other.status == status &&
+      listEquals(other.cast, cast);
   }
 
   @override
   int get hashCode => status.hashCode ^ cast.hashCode;
 
-  @override
-  String toString() => 'CastMoviesState(status: $status, cast: $cast)';
-
   CastMoviesState copyWith({
     CastStatus? status,
-    Cast? cast,
+    List<Cast>? cast,
   }) {
     return CastMoviesState(
       status: status ?? this.status,
       cast: cast ?? this.cast,
     );
   }
+
+  @override
+  String toString() => 'CastMoviesState(status: $status, cast: $cast)';
 }
