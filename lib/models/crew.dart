@@ -72,21 +72,29 @@ class Crew {
   @override
   bool operator ==(covariant Crew other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.department == department &&
-      other.job == job &&
-      other.profilePath == profilePath;
+
+    return other.id == id &&
+        other.name == name &&
+        other.department == department &&
+        other.job == job &&
+        other.profilePath == profilePath;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      name.hashCode ^
-      department.hashCode ^
-      job.hashCode ^
-      profilePath.hashCode;
+        name.hashCode ^
+        department.hashCode ^
+        job.hashCode ^
+        profilePath.hashCode;
   }
+
+  String get imageUrl => 'https://image.tmdb.org/t/p/w500/$profilePath';
+
+  factory Crew.initial() => Crew(
+      id: -1,
+      name: 'name',
+      department: 'department',
+      job: 'job',
+      profilePath: 'profilePath');
 }
