@@ -1,106 +1,288 @@
-import 'dart:html';
-
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/constants/my_dimentions.dart';
-import 'package:flutter_movie/constants/my_text_styles.dart';
+import 'package:flutter_movie/cubits/genre_movies/genre_movies_cubit_cubit.dart';
+import 'package:flutter_movie/cubits/most_popular_movies/most_popular_movies_cubit_cubit.dart';
+import 'package:flutter_movie/cubits/top_rated_movies/top_rated_movies_cubit.dart';
+import 'package:flutter_movie/cubits/up_comming_movies/up_comming_movies_cubit.dart';
+import 'package:flutter_movie/screens/details_screen/details_screen.dart';
+import 'package:flutter_movie/shared_widgets/movie_card_small.dart';
+import 'package:flutter_movie/shared_widgets/most_popular_card.dart';
 import 'package:flutter_movie/shared_widgets/title_with_text_btn.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_movie/utils/utils.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool loading = false;
+  int selectedMainCardItem = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchGenres();
+    _fetchMostPopual();
+    _fetchTopRated();
+    _fetchUpComming();
+  }
+
+  setMainCardItem(int index) {
+    setState(() {
+      selectedMainCardItem = index;
+    });
+  }
+
+  void _fetchGenres() async {
+    context.read<GenreMoviesCubit>().fetchGenres();
+  }
+
+  void _fetchMostPopual() async {
+    context.read<MostPopularMoviesCubit>().fetchMostPopularMovies();
+  }
+
+  void _fetchTopRated() async {
+    context.read<TopRatedMoviesCubit>().fetchTopRatedMovies();
+  }
+
+  void _fetchUpComming() async {
+    context.read<UpCommingMoviesCubit>().fetchUpCommingMovies();
+  }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
     return SafeArea(
-        child: Scaffold(
-      backgroundColor: MyColors.bgColor,
-      body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              TitleWithTextBtn(onPressed: () {}, title: "Best of all the time"),
-              Container(
-                height: size.height / 2.236,
-                color: Colors.green,
-                child: MainItemCard(
-                    img: '',
-                    title: 'The Walking Dead',
-                    category: 'Action, Drama',
-                    rate: 3.5,
-                    selected: true,
-                    ),
-              )
-            ],
+      child: Scaffold(
+          backgroundColor: MyColors.bgColor,
+          body: SizedBox(
+            width: size.width,
+            height: size.height,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  TitleWithTextBtn(onPressed: () {}, title: "Most popular"),
+                  MostPopularSelection(context),
+                  const SizedBox(
+                    height: 48,
+                  ),
+                  TitleWithTextBtn(onPressed: () {}, title: "Top Rated"),
+                  SizedBox(
+                    height: MyDimens.small,
+                  ),
+                  TopRatedSelection(context),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  TitleWithTextBtn(onPressed: () {}, title: "Up Comming"),
+                  SizedBox(
+                    height: MyDimens.small,
+                  ),
+                  UpCommingSelection(context),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                ],
+              ),
+            ),
           )),
-    ));
+    );
   }
-}
 
-class MainItemCard extends StatelessWidget {
-  final String img;
-  final String title;
-  final String category;
-  final double rate;
-  final bool selected;
-  const MainItemCard({
-    required this.img,
-    required this.title,
-    required this.category,
-    required this.rate,
-    this.selected = false,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget MostPopularSelection(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Column(children: [
-      Container(
-        margin: EdgeInsets.all(MyDimens.small),
-        height: size.height / 3.075,
-        decoration: BoxDecoration(
-            color: Colors.blue, // for test
-            boxShadow: selected ?[
-              BoxShadow(color: MyColors.primaryColor.withOpacity(0.8),blurRadius: 8)
-            ] : null,
-            borderRadius: BorderRadius.circular(25),
-            image: DecorationImage(image: AssetImage(img), fit: BoxFit.cover)),
+    return SizedBox(
+      height: size.height / 2.236,
+      child: BlocConsumer<MostPopularMoviesCubit, MostPoularMoviesState>(
+          builder: (context, state) {
+            if (state.status == MostPupularMoviesStatus.initial) {
+              return const Text('Not initial yet');
+            } else if (state.status == MostPupularMoviesStatus.loading) {
+              return const SpinKitFadingFour(
+                color: MyColors.primaryColor,
+              );
+            } else if (state.status == MostPupularMoviesStatus.loaded) {
+              return CarouselSlider.builder(
+                //carouselController: carouselController,
+                itemCount: state.movies.length,
+                itemBuilder: ((context, index, realIndex) {
+                  var genreIds = state.movies[index].genreIds;
+                  String joinedString = getGenreNames(genreIds,
+                          context.read<GenreMoviesCubit>().state.genres)
+                      .join(', ');
+                  String heroTag = '${UniqueKey()}${state.movies[index].id}';
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MostPopularCard(
+                      heroTag: heroTag,
+                      img: state.movies[index].posterUrl,
+                      title: state.movies[index].title,
+                      category: joinedString,
+                      rate: state.movies[index].voteAverage! / 2 ?? 0.0,
+                      selected: index == selectedMainCardItem ? true : false,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailsScreen(
+                                      movie: state.movies[index],
+                                      heroTag: heroTag,
+                                    )));
+                      },
+                    ),
+                  );
+                }),
+                options: CarouselOptions(
+                  height: size.height / 2.236,
+                  //aspectRatio: 16 / 9,
+                  viewportFraction: 0.6,
+                  initialPage: selectedMainCardItem,
+                  enableInfiniteScroll: true,
+                  reverse: false,
+                  enlargeCenterPage: true,
+                  enlargeFactor: 0.3,
+                  onPageChanged: (int index, _) {
+                    setMainCardItem(index);
+                  },
+                  scrollDirection: Axis.horizontal,
+                ),
+              );
+            } else if (state.status == MostPupularMoviesStatus.error) {
+              return const Text('ERROR');
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+          listener: (context, state) {}),
+    );
+  }
+
+  Widget TopRatedSelection(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return SizedBox(
+      height: (size.height / 7.25) + 16,
+      child: BlocBuilder<TopRatedMoviesCubit, TopRatedMoviesState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case TopRatedStatus.initial:
+              return Text('intial');
+              break;
+            case TopRatedStatus.loading:
+              return const SpinKitFadingFour(
+                color: MyColors.primaryColor,
+              );
+              break;
+            case TopRatedStatus.loaded:
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: ((context, index) {
+                  var item = state.movies[index];
+                  String joinedString = getGenreNames(item.genreIds,
+                          context.read<GenreMoviesCubit>().state.genres)
+                      .join(', ');
+                  String heroTag = '${UniqueKey()}${state.movies[index].id}';
+
+                  return Padding(
+                    padding: EdgeInsets.fromLTRB(index == 0 ? 16 : 10, 8,
+                        index == state.movies.length - 1 ? 16 : 10, 8),
+                    child: MovieCardSmall(
+                      img: item.posterUrl,
+                      title: item.title,
+                      category: joinedString,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => DetailsScreen(
+                                      movie: item,
+                                      heroTag: heroTag,
+                                    ))));
+                      },
+                      heroTag: heroTag,
+                    ),
+                  );
+                }),
+                itemCount: state.movies.length,
+              );
+              break;
+            case TopRatedStatus.error:
+              return Text('ERROR');
+              break;
+          }
+        },
       ),
-      SizedBox(
-        height: MyDimens.small,
+    );
+  }
+
+  Widget UpCommingSelection(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return SizedBox(
+      height: (size.height / 7.25) + 16,
+      child: BlocBuilder<UpCommingMoviesCubit, UpCommingMoviesState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case UpCommingStatus.initial:
+              return Text('intial');
+              break;
+            case UpCommingStatus.loading:
+              return const SpinKitFadingFour(
+                color: MyColors.primaryColor,
+              );
+              break;
+            case UpCommingStatus.loaded:
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: ((context, index) {
+                  var item = state.movies[index];
+                  String joinedString = getGenreNames(item.genreIds,
+                          context.read<GenreMoviesCubit>().state.genres)
+                      .join(', ');
+                  String heroTag = '${UniqueKey()}${state.movies[index].id}';
+
+                  return Padding(
+                    padding: EdgeInsets.fromLTRB(index == 0 ? 16 : 10, 8,
+                        index == state.movies.length - 1 ? 16 : 10, 8),
+                    child: MovieCardSmall(
+                      img: item.posterUrl,
+                      title: item.title,
+                      category: joinedString,
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) => DetailsScreen(
+                                      movie: item,
+                                      heroTag: heroTag,
+                                    ))));
+                      },
+                      heroTag: heroTag,
+                    ),
+                  );
+                }),
+                itemCount: state.movies.length,
+              );
+              break;
+            case UpCommingStatus.error:
+              return Text('ERROR');
+              break;
+          }
+        },
       ),
-      RatingBar(
-          itemSize: 15,
-          initialRating: rate,
-          minRating: 1,
-          direction: Axis.horizontal,
-          allowHalfRating: true,
-          itemCount: 5,
-          //unratedColor: MyColors.primaryColor,
-          glowColor: MyColors.primaryColor,
-          ratingWidget: RatingWidget(
-            full: const Icon(Icons.star,color: MyColors.primaryColor,),
-            half: const Icon(Icons.star_half_outlined,color: MyColors.primaryColor,),
-            empty: const Icon(Icons.star_border_outlined,color: MyColors.primaryColor,),
-          ),
-          onRatingUpdate: (_) {}),
-      const SizedBox(
-        height: 4,
-      ),
-      Text(
-        title,
-        style: MyTextStyles.title,
-      ),
-      const SizedBox(
-        height: 4,
-      ),
-      Text(
-        category,
-        style: MyTextStyles.subTitle.copyWith(color: MyColors.primaryTextColor),
-      ),
-    ]);
+    );
   }
 }
