@@ -57,7 +57,6 @@ class Cast {
 
   String toJson() => json.encode(toMap());
 
-
   @override
   String toString() {
     return 'Cast(id: $id, name: $name, character: $character, profilePath: $profilePath)';
@@ -66,21 +65,22 @@ class Cast {
   @override
   bool operator ==(covariant Cast other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.character == character &&
-      other.profilePath == profilePath;
+
+    return other.id == id &&
+        other.name == name &&
+        other.character == character &&
+        other.profilePath == profilePath;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      name.hashCode ^
-      character.hashCode ^
-      profilePath.hashCode;
+        name.hashCode ^
+        character.hashCode ^
+        profilePath.hashCode;
   }
 
   String get imageUrl => 'https://image.tmdb.org/t/p/w500/$profilePath';
+  factory Cast.initial() => Cast(
+      id: -1, name: 'name', character: 'character', profilePath: 'profilePath');
 }
