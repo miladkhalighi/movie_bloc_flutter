@@ -9,4 +9,7 @@ class MyColors {
   static const secondaryTextColor = Color(0xFFBABABA);
   static const secondaryColor = Color.fromARGB(255, 24, 24, 24);
   static const cardBgColor = Color(0xFF2C2C2C);
+  static const seeMoreColor = Color(0xFF47CFFF);
+
+
 }
