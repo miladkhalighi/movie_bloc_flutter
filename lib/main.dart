@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movie/cubits/cast_movies/cast_movies_cubit.dart';
+import 'package:flutter_movie/cubits/crew_movies/crew_movies_cubit.dart';
 import 'package:flutter_movie/cubits/genre_movies/genre_movies_cubit_cubit.dart';
 import 'package:flutter_movie/cubits/most_popular_movies/most_popular_movies_cubit_cubit.dart';
 import 'package:flutter_movie/cubits/top_rated_movies/top_rated_movies_cubit.dart';
@@ -47,6 +49,14 @@ class MyApp extends StatelessWidget {
               repository: context.read<MovieRepository>(),
               genreMoviesCubit: context.read<GenreMoviesCubit>(),
             ),
+          ),
+          BlocProvider(
+            create: (context) =>
+                CastMoviesCubit(repository: context.read<MovieRepository>()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                CrewMoviesCubit(repository: context.read<MovieRepository>()),
           ),
         ],
         child: MaterialApp(

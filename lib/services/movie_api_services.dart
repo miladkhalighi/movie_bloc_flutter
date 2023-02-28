@@ -206,10 +206,8 @@ class MovieApiServices {
           .get(url, queryParameters: {'api_key': MovieApiConstants.apiKey});
       if (response.statusCode == 200) {
         final castJson = response.data['cast'];
-        //final crewJson = response.data['crew'];
 
         var cast = List<Cast>.from(castJson.map((json) => Cast.fromJson(json)));
-        //var crew = List.from(crewJson).map((json) => Crew.fromJson(json));
 
         //final List<Map<String, dynamic>> castAndCrew = [...castJson, ...crewJson];
 
@@ -223,14 +221,13 @@ class MovieApiServices {
     return List.empty();
   }
 
-    Future<List<Crew>> getCrew(int id) async {
+  Future<List<Crew>> getCrew(int id) async {
     //https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={api_key}
     String url = '${MovieApiConstants.baseUrl}/3/movie/$id/credits';
     try {
       var response = await dio
           .get(url, queryParameters: {'api_key': MovieApiConstants.apiKey});
       if (response.statusCode == 200) {
-
         final crewJson = response.data['crew'];
         var crew = List<Crew>.from(crewJson.map((json) => Crew.fromJson(json)));
 
@@ -245,7 +242,4 @@ class MovieApiServices {
     }
     return List.empty();
   }
-
-
-
 }

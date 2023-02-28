@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: size.width,
             height: size.height,
             child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(
@@ -105,10 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
     var size = MediaQuery.of(context).size;
     return SizedBox(
       height: size.height / 2.236,
-      child: BlocConsumer<MostPopularMoviesCubit, MostPoularMoviesState>(
+      child: BlocBuilder<MostPopularMoviesCubit, MostPoularMoviesState>(
           builder: (context, state) {
             if (state.status == MostPupularMoviesStatus.initial) {
-              return const Text('Not initial yet');
+              return const SpinKitFadingFour(
+                color: MyColors.primaryColor,
+              );
             } else if (state.status == MostPupularMoviesStatus.loading) {
               return const SpinKitFadingFour(
                 color: MyColors.primaryColor,
@@ -166,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return const SizedBox.shrink();
             }
           },
-          listener: (context, state) {}),
+          ),
     );
   }
 
@@ -178,7 +180,9 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, state) {
           switch (state.status) {
             case TopRatedStatus.initial:
-              return Text('intial');
+              return const SpinKitFadingFour(
+                color: MyColors.primaryColor,
+              );
               break;
             case TopRatedStatus.loading:
               return const SpinKitFadingFour(
@@ -236,7 +240,9 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context, state) {
           switch (state.status) {
             case UpCommingStatus.initial:
-              return Text('intial');
+              return const SpinKitFadingFour(
+                color: MyColors.primaryColor,
+              );
               break;
             case UpCommingStatus.loading:
               return const SpinKitFadingFour(
