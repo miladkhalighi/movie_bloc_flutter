@@ -56,6 +56,7 @@ class MovieRepository {
   Future<List<Cast>> fetchCast(int movieId) async {
     try {
       var cast = await movieApiServices.getCast(movieId);
+      print("\nCAST\n" + cast.toString());
       return cast;
     } catch (e) {
       print(e.toString());
@@ -65,6 +66,7 @@ class MovieRepository {
   Future<List<Crew>> fetchCrew(int movieId) async {
     try {
       var crew = await movieApiServices.getCrew(movieId);
+      print("\nCREW\n" + crew.toString());
       return crew;
     } catch (e) {
       print(e.toString());

@@ -2,10 +2,10 @@
 import 'dart:convert';
 
 class Cast {
-  int id;
-  String name;
-  String character;
-  String profilePath;
+  int? id;
+  String? name;
+  String? character;
+  String? profilePath;
 
   Cast({
     required this.id,

@@ -15,7 +15,7 @@ class CrewMoviesCubit extends Cubit<CrewMoviesState> {
     try {
       emit(state.copyWith(status: CrewStatus.loading));
       var crew = await repository.fetchCrew(movieId);
-      emit(state.copyWith(status: CrewStatus.loaded));
+      emit(state.copyWith(status: CrewStatus.loaded,crew: crew));
     } catch (e) {
       emit(state.copyWith(status: CrewStatus.error));
     }

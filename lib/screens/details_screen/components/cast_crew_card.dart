@@ -3,29 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/constants/my_dimentions.dart';
 import 'package:flutter_movie/constants/my_text_styles.dart';
-import 'package:flutter_movie/models/cast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CastCrewCard extends StatelessWidget {
-  final Cast cast;
+  final String title;
+  final String subTitle;
+  final String imgUrl;
   const CastCrewCard({
     Key? key,
-    required this.cast,
+    required this.title, required this.subTitle, required this.imgUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return SizedBox(
-      width: size.width / 2,
+      width: size.width / 1.8,
       child: Row(
         children: [
-          SizedBox(
-            width: 64,
-            height: 64,
-            child: ClipOval(
+          Expanded(
+            flex: 1,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(1000),
               child: CachedNetworkImage(
-                imageUrl: cast.imageUrl,
+                imageUrl: imgUrl,
                 placeholder: (context, url) => const SpinKitFadingFour(
                   color: MyColors.primaryColor,
                 ),
@@ -40,23 +41,26 @@ class CastCrewCard extends StatelessWidget {
           SizedBox(
             width: MyDimens.small,
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                cast.name,
-                style: MyTextStyles.title.copyWith(fontSize: 16),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              Text(
-                cast.character,
-                style: MyTextStyles.subTitle.copyWith(fontSize: 16),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-            ],
+          Expanded(
+            flex: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: MyTextStyles.title.copyWith(fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                Text(
+                  subTitle,
+                  style: MyTextStyles.subTitle.copyWith(fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ],
+            ),
           )
         ],
       ),

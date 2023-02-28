@@ -15,7 +15,7 @@ class CastMoviesCubit extends Cubit<CastMoviesState> {
     try {
       emit(state.copyWith(status: CastStatus.loading));
       List<Cast> cast = await repository.fetchCast(movieId);
-      emit(state.copyWith(status: CastStatus.loaded));
+      emit(state.copyWith(status: CastStatus.loaded,cast: cast));
     } catch (e) {
       emit(state.copyWith(status: CastStatus.error));
     }

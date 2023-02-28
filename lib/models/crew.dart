@@ -2,11 +2,11 @@
 import 'dart:convert';
 
 class Crew {
-  int id;
-  String name;
-  String department;
-  String job;
-  String profilePath;
+  int? id;
+  String? name;
+  String? department;
+  String? job;
+  String? profilePath;
 
   Crew({
     required this.id,
