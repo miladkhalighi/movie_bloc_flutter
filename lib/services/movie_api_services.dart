@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_movie/constants/movie_api_constants.dart';
+import 'package:flutter_movie/models/cast.dart';
+import 'package:flutter_movie/models/crew.dart';
 import 'package:flutter_movie/models/genre.dart';
 import 'package:flutter_movie/models/movie.dart';
 
@@ -196,25 +198,54 @@ class MovieApiServices {
     return List.empty();
   }
 
-  Future<List<Genre>> getCastAndCrew(String id) async {
+  Future<List<Cast>> getCast(int id) async {
     //https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={api_key}
     String url = '${MovieApiConstants.baseUrl}/3/movie/$id/credits';
     try {
-      var response = await dio.get(url, queryParameters: {'api_key': MovieApiConstants.apiKey});
-      //TODO
+      var response = await dio
+          .get(url, queryParameters: {'api_key': MovieApiConstants.apiKey});
       if (response.statusCode == 200) {
-        var genres = response.data['genres'];
+        final castJson = response.data['cast'];
+        //final crewJson = response.data['crew'];
 
-        var genreList = List<Genre>.from(
-            genres.map((genreJson) => Genre.fromJson(genreJson)));
+        var cast = List<Cast>.from(castJson.map((json) => Cast.fromJson(json)));
+        //var crew = List.from(crewJson).map((json) => Crew.fromJson(json));
 
-        return genreList;
+        //final List<Map<String, dynamic>> castAndCrew = [...castJson, ...crewJson];
+
+        return cast;
       } else {
-        throw Exception('get request to fetch genres failed');
+        throw Exception('get request to fetch cast failed');
       }
     } catch (e) {
       print(e.toString());
     }
     return List.empty();
   }
+
+    Future<List<Crew>> getCrew(int id) async {
+    //https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key={api_key}
+    String url = '${MovieApiConstants.baseUrl}/3/movie/$id/credits';
+    try {
+      var response = await dio
+          .get(url, queryParameters: {'api_key': MovieApiConstants.apiKey});
+      if (response.statusCode == 200) {
+
+        final crewJson = response.data['crew'];
+        var crew = List<Crew>.from(crewJson.map((json) => Crew.fromJson(json)));
+
+        //final List<Map<String, dynamic>> castAndCrew = [...castJson, ...crewJson];
+
+        return crew;
+      } else {
+        throw Exception('get request to fetch crew failed');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return List.empty();
+  }
+
+
+
 }
