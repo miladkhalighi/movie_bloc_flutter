@@ -1,0 +1,94 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_movie/constants/my_colors.dart';
+import 'package:flutter_movie/constants/my_text_styles.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+class MovieCardSmall extends StatelessWidget {
+  const MovieCardSmall({
+    Key? key,
+    required this.heroTag,
+    required this.img,
+    required this.title,
+    required this.category,
+    required this.onPressed,
+  }) : super(key: key);
+
+  final Function() onPressed;
+  final String heroTag;
+  final String img;
+  final String title;
+  final String category;
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        width: size.width / 1.973,
+        height: size.height / 7.25,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: MyColors.cardBgColor,
+            boxShadow: [
+              BoxShadow(color: Colors.white.withOpacity(0.4), blurRadius: 8)
+            ]),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(5),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Hero(
+                    tag: heroTag,
+                    child: CachedNetworkImage(
+                      imageUrl: img,
+                      placeholder: (context, url) => const SpinKitFadingFour(
+                        color: MyColors.primaryColor,
+                      ),
+                      errorWidget: (context, url, error) => const Image(
+                        image: AssetImage('assets/images/img2.png'),
+                        fit: BoxFit.cover,
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      title,
+                      style: MyTextStyles.title.copyWith(fontSize: 14),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                    Text(
+                      category,
+                      style: MyTextStyles.subTitle,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
