@@ -14,4 +14,8 @@ class MovieApiConstants {
   static const String mostPopularPath = '/3/movie/popular';
   static const String topRatedPath = '/3/movie/top_rated';
   static const String nowUpComingPath = '/3/movie/upcoming';
+
+  static const String imagePrefix = 'https://image.tmdb.org/t/p/w500';
+  static const String imagePrefixOrg = 'https://image.tmdb.org/t/p/original';
+  static const String moviePhotos = '$baseUrl/3/movie/';
 }
