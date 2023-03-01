@@ -16,7 +16,7 @@ class PhotoCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: SizedBox(
-        width: size.width / 3,
+        width: size.width / 2.5,
         child: CachedNetworkImage(
           imageUrl: imgUrl,
           placeholder: (context, url) => const SpinKitFadingFour(

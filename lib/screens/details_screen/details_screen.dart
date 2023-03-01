@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,10 +10,13 @@ import 'package:flutter_movie/constants/my_text_styles.dart';
 import 'package:flutter_movie/cubits/cast_movies/cast_movies_cubit.dart';
 import 'package:flutter_movie/cubits/crew_movies/crew_movies_cubit.dart';
 import 'package:flutter_movie/cubits/genre_movies/genre_movies_cubit_cubit.dart';
+import 'package:flutter_movie/cubits/photos_movie/photos_movie_cubit.dart';
 import 'package:flutter_movie/models/movie.dart';
+import 'package:flutter_movie/repository/movie_repository.dart';
 import 'package:flutter_movie/screens/details_screen/components/cast_crew_card.dart';
 import 'package:flutter_movie/screens/details_screen/components/photo_card.dart';
 import 'package:flutter_movie/screens/details_screen/components/video_card.dart';
+import 'package:flutter_movie/services/movie_api_services.dart';
 import 'package:flutter_movie/shared_widgets/title_with_text_btn.dart';
 import 'package:flutter_movie/utils/utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -32,6 +36,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   void initState() {
     _fetchCast();
     _fetchCrew();
+    _fetchPhotos();
     super.initState();
   }
 
@@ -43,10 +48,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
     context.read<CrewMoviesCubit>().fetchCrew(widget.movie.id);
   }
 
+  void _fetchPhotos() {
+    context.read<PhotosMovieCubit>().fetchMoviePhotos(widget.movie.id);
+  }
+
   @override
   Widget build(BuildContext context) {
-    print("\nRUN TIME");
-    print(widget.movie.runtime);
     var size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
@@ -264,20 +271,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
           FadeInDown(
             duration: const Duration(milliseconds: 1000),
             child: SizedBox(
-              height: size.width / 2.5,
-              child: ListView.builder(
-                itemBuilder: ((context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PhotoCard(
-                      imgUrl: '',
-                    ),
-                  );
-                }),
-                itemCount: 20,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-              ),
+              height: size.width / 2,
+              child: const PhotoList(),
             ),
           ),
           const SizedBox(
@@ -292,7 +287,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             duration: const Duration(milliseconds: 1000),
             delay: const Duration(microseconds: 2000),
             child: SizedBox(
-              height: size.width / 2.5,
+              height: size.width / 2,
               child: ListView.builder(
                 itemBuilder: ((context, index) {
                   return Padding(
@@ -308,6 +303,42 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PhotoList extends StatelessWidget {
+  const PhotoList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<PhotosMovieCubit, PhotosMoviesStates>(
+      builder: (context, state) {
+        Widget widget = const SizedBox.shrink();
+        if (state.status == PhotosStatus.initial) {
+          widget = const SpinKitFadingFour(color: MyColors.primaryColor);
+        } else if (state.status == PhotosStatus.loading) {
+          widget = const SpinKitFadingFour(color: MyColors.primaryColor);
+        } else if (state.status == PhotosStatus.error) {
+          //TODO replace this text with another widget
+          widget = const Text('ERROR');
+        } else if (state.status == PhotosStatus.loaded) {
+          widget = ListView.builder(
+            itemBuilder: ((context, index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: PhotoCard(
+                  imgUrl: state.photos[index],
+                ),
+              );
+            }),
+            itemCount: state.photos.length,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+          );
+        }
+        return widget;
+      },
     );
   }
 }
