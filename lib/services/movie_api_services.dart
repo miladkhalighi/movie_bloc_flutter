@@ -68,26 +68,19 @@ class MovieApiServices {
     return List<Movie>.empty();
   }
 
-  // Future<MovieItemModel?> getMovieById(String id) async {
+  // Future<List<Movie>> getMovieById(int movieId) async {
+  //   //https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey
   //   try {
-  //     // final uri = Uri(
-  //     //     scheme: 'https',
-  //     //     host: baseUrl,
-  //     //     path: getMoviePath,
-  //     //     queryParameters: {
-  //     //       'api_key': apiKey,
-  //     //       'language': 'en',
-  //     //       'external_source': id,
-  //     //     });
   //     var response = await dio.get(
   //         MovieApiConstants.baseUrl + MovieApiConstants.getMoviePath,
   //         queryParameters: {
   //           'api_key': MovieApiConstants.apiKey,
   //           'language': 'en',
-  //           'external_source': id,
+  //           'external_source': movieId,
   //         });
   //     if (response.statusCode == 200) {
-  //       print(response.data.toString());
+  //       var response = response.data;
+  //       var movies = List.from();
   //       return MovieItemModel.fromJson(response.data);
   //     } else {
   //       String errMsg =
@@ -96,7 +89,6 @@ class MovieApiServices {
   //     }
   //   } catch (e) {
   //     e.toString();
-  //     return null;
   //   }
   // }
 
@@ -242,4 +234,39 @@ class MovieApiServices {
     }
     return List.empty();
   }
+
+  Future<List<String>> fetchMovieImages(int movieId) async {
+    //'https://api.themoviedb.org/3/movie/$movieId/images?api_key=$API_KEY'
+    String path = '${MovieApiConstants.moviePhotos}$movieId/images';
+    try {
+      final response = await dio
+          .get(path, queryParameters: {'api_key': MovieApiConstants.apiKey});
+
+      if (response.statusCode == 200) {
+        var jsonBackDrops = response.data['backdrops'];
+        List<String> photos =
+            List<String>.from(jsonBackDrops.map((json) => json['file_path']));
+        List<String> photosUrl =
+            photos.map((e) => '${MovieApiConstants.imagePrefixOrg}$e').toList();
+        //print(photosUrl);
+        return photosUrl;
+      } else {
+        throw Exception('Failed to fetch movie images');
+      }
+      // ignore: empty_catches
+    } catch (e) {}
+    return List.empty();
+  }
+
+  // Future<List<dynamic>> fetchMovieVideos(int movieId) async {
+  //   final response = await http.get(
+  //       'https://api.themoviedb.org/3/movie/$movieId/videos?api_key=$API_KEY');
+
+  //   if (response.statusCode == 200) {
+  //     final decodedResponse = jsonDecode(response.body);
+  //     return decodedResponse['results'];
+  //   } else {
+  //     throw Exception('Failed to fetch movie videos');
+  //   }
+  // }
 }

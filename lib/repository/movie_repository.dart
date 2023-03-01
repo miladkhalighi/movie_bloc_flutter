@@ -63,6 +63,7 @@ class MovieRepository {
       return List.empty();
     }
   }
+
   Future<List<Crew>> fetchCrew(int movieId) async {
     try {
       var crew = await movieApiServices.getCrew(movieId);
@@ -72,5 +73,14 @@ class MovieRepository {
       print(e.toString());
       return List.empty();
     }
+  }
+
+  Future<List<String>> fetchMoviePhotos(int movieId) async {
+    try {
+      final photos = await movieApiServices.fetchMovieImages(movieId);
+      print("\nPHOTOS\n" + photos.toString());
+      return photos;
+    } catch (e) {}
+    return List.empty();
   }
 }
