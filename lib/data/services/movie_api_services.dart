@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_movie/constants/movie_api_constants.dart';
-import 'package:flutter_movie/models/cast.dart';
-import 'package:flutter_movie/models/crew.dart';
-import 'package:flutter_movie/models/genre.dart';
-import 'package:flutter_movie/models/movie.dart';
+import 'package:flutter_movie/data/models/cast.dart';
+import 'package:flutter_movie/data/models/crew.dart';
+import 'package:flutter_movie/data/models/genre.dart';
+import 'package:flutter_movie/data/models/movie.dart';
 
 class MovieApiServices {
   final Dio dio;
@@ -258,15 +258,27 @@ class MovieApiServices {
     return List.empty();
   }
 
-  // Future<List<dynamic>> fetchMovieVideos(int movieId) async {
-  //   final response = await http.get(
-  //       'https://api.themoviedb.org/3/movie/$movieId/videos?api_key=$API_KEY');
+  Future<List<String>> fetchMovieVideos(int movieId) async {
+    String path = '${MovieApiConstants.movieVideos}$movieId/videos';
+    try {
+      final response = await dio
+          .get(path, queryParameters: {'api_key': MovieApiConstants.apiKey});
 
-  //   if (response.statusCode == 200) {
-  //     final decodedResponse = jsonDecode(response.body);
-  //     return decodedResponse['results'];
-  //   } else {
-  //     throw Exception('Failed to fetch movie videos');
-  //   }
-  // }
+      if (response.statusCode == 200) {
+        final List<dynamic> videos = response.data['results'];
+        print('\nVIDEOS\n');
+        print(videos);
+        List<String> videoIds =
+            List<String>.from(videos.map((e) => e['id']));
+        print('\nIDS\n');
+        print(videoIds);
+        return videoIds;
+      } else {
+        throw Exception('Failed to fetch movie videos');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return List.empty();
+  }
 }

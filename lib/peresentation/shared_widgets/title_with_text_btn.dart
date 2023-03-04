@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/constants/my_text_styles.dart';
 
-import '../constants/my_dimentions.dart';
+import '../../constants/my_dimentions.dart';
 
 class TitleWithTextBtn extends StatelessWidget {
   final Function() onPressed;

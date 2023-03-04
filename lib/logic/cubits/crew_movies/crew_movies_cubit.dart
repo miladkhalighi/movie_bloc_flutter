@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_movie/models/crew.dart';
-import 'package:flutter_movie/repository/movie_repository.dart';
+import 'package:flutter_movie/data/models/crew.dart';
+import 'package:flutter_movie/data/repository/movie_repository.dart';
 
 part 'crew_movies_state.dart';
 

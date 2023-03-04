@@ -1,4 +1,4 @@
-import 'package:flutter_movie/models/genre.dart';
+import 'package:flutter_movie/data/models/genre.dart';
 
 String millisToHourAndMin(int? millis) {
   if (millis == null) {
