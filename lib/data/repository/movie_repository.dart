@@ -1,8 +1,8 @@
-import 'package:flutter_movie/models/cast.dart';
-import 'package:flutter_movie/models/crew.dart';
-import 'package:flutter_movie/models/genre.dart';
-import 'package:flutter_movie/models/movie.dart';
-import 'package:flutter_movie/services/movie_api_services.dart';
+import 'package:flutter_movie/data/models/cast.dart';
+import 'package:flutter_movie/data/models/crew.dart';
+import 'package:flutter_movie/data/models/genre.dart';
+import 'package:flutter_movie/data/models/movie.dart';
+import 'package:flutter_movie/data/services/movie_api_services.dart';
 
 class MovieRepository {
   final MovieApiServices movieApiServices;

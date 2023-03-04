@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_movie/repository/movie_repository.dart';
+import 'package:flutter_movie/data/repository/movie_repository.dart';
 
 part 'photos_movie_state.dart';
 

@@ -1,21 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_movie/cubits/cast_movies/cast_movies_cubit.dart';
-import 'package:flutter_movie/cubits/crew_movies/crew_movies_cubit.dart';
-import 'package:flutter_movie/cubits/genre_movies/genre_movies_cubit_cubit.dart';
-import 'package:flutter_movie/cubits/most_popular_movies/most_popular_movies_cubit_cubit.dart';
-import 'package:flutter_movie/cubits/photos_movie/photos_movie_cubit.dart';
-import 'package:flutter_movie/cubits/top_rated_movies/top_rated_movies_cubit.dart';
-import 'package:flutter_movie/cubits/up_comming_movies/up_comming_movies_cubit.dart';
-import 'package:flutter_movie/models/movie.dart';
-import 'package:flutter_movie/repository/movie_repository.dart';
-import 'package:flutter_movie/screens/details_screen/details_screen.dart';
-import 'package:flutter_movie/screens/home_screen.dart';
-import 'package:flutter_movie/services/movie_api_services.dart';
+import 'package:flutter_movie/data/repository/movie_repository.dart';
+import 'package:flutter_movie/logic/cubits/cast_movies/cast_movies_cubit.dart';
+import 'package:flutter_movie/logic/cubits/crew_movies/crew_movies_cubit.dart';
+import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit.dart';
+import 'package:flutter_movie/logic/cubits/most_popular_movies/most_popular_movies_cubit_cubit.dart';
+import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart';
+import 'package:flutter_movie/logic/cubits/top_rated_movies/top_rated_movies_cubit.dart';
+import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_cubit.dart';
+import 'package:flutter_movie/peresentation/screens/home_screen/home_screen.dart';
+import 'package:flutter_movie/data/services/movie_api_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
+   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

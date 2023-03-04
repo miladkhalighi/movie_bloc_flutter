@@ -7,18 +7,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/constants/my_dimentions.dart';
 import 'package:flutter_movie/constants/my_text_styles.dart';
-import 'package:flutter_movie/cubits/cast_movies/cast_movies_cubit.dart';
-import 'package:flutter_movie/cubits/crew_movies/crew_movies_cubit.dart';
-import 'package:flutter_movie/cubits/genre_movies/genre_movies_cubit_cubit.dart';
-import 'package:flutter_movie/cubits/photos_movie/photos_movie_cubit.dart';
-import 'package:flutter_movie/models/movie.dart';
-import 'package:flutter_movie/repository/movie_repository.dart';
-import 'package:flutter_movie/screens/details_screen/components/cast_crew_card.dart';
-import 'package:flutter_movie/screens/details_screen/components/photo_card.dart';
-import 'package:flutter_movie/screens/details_screen/components/video_card.dart';
-import 'package:flutter_movie/services/movie_api_services.dart';
-import 'package:flutter_movie/shared_widgets/title_with_text_btn.dart';
-import 'package:flutter_movie/utils/utils.dart';
+import 'package:flutter_movie/data/models/movie.dart';
+import 'package:flutter_movie/logic/cubits/cast_movies/cast_movies_cubit.dart';
+import 'package:flutter_movie/logic/cubits/crew_movies/crew_movies_cubit.dart';
+import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit.dart';
+import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart';
+import 'package:flutter_movie/peresentation/screens/details_screen/components/cast_crew_card.dart';
+import 'package:flutter_movie/peresentation/screens/details_screen/components/photo_card.dart';
+import 'package:flutter_movie/peresentation/screens/video_screen/video_screen.dart';
+import 'package:flutter_movie/data/services/movie_api_services.dart';
+import 'package:flutter_movie/peresentation/shared_widgets/title_with_text_btn.dart';
+import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -34,9 +33,10 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   @override
   void initState() {
-    _fetchCast();
-    _fetchCrew();
-    _fetchPhotos();
+    //_fetchCast();
+    //_fetchCrew();
+    //_fetchPhotos();
+    _fetchVideos();
     super.initState();
   }
 
@@ -52,6 +52,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
     context.read<PhotosMovieCubit>().fetchMoviePhotos(widget.movie.id);
   }
 
+  void _fetchVideos() {
+    MovieApiServices api = MovieApiServices(dio: Dio());
+    api.fetchMovieVideos(widget.movie.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -61,8 +66,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
           scrollDirection: Axis.vertical,
           //physics: const BouncingScrollPhysics(),
           children: [
-            Page1(context, size),
             Page2(size),
+            Page1(context, size),
           ],
         ),
       ),
@@ -271,7 +276,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           FadeInDown(
             duration: const Duration(milliseconds: 1000),
             child: SizedBox(
-              height: size.width / 2,
+              height: size.width / 3,
               child: const PhotoList(),
             ),
           ),
@@ -287,12 +292,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
             duration: const Duration(milliseconds: 1000),
             delay: const Duration(microseconds: 2000),
             child: SizedBox(
-              height: size.width / 2,
+              height: size.width / 3,
               child: ListView.builder(
                 itemBuilder: ((context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: VideoCard(),
+                    child: SizedBox(
+                      width: 200,
+                      height: 100,
+                      child: VideoScreen(videoId: 'iLnmTe5Q2Qw'),
+                    ),
                   );
                 }),
                 itemCount: 20,
@@ -301,6 +310,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ),
             ),
           ),
+          
         ],
       ),
     );
