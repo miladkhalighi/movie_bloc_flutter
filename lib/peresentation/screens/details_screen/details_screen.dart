@@ -1,6 +1,5 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dio/dio.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,10 +11,10 @@ import 'package:flutter_movie/logic/cubits/cast_movies/cast_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/crew_movies/crew_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit.dart';
 import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart';
-import 'package:flutter_movie/peresentation/screens/details_screen/components/cast_crew_card.dart';
-import 'package:flutter_movie/peresentation/screens/details_screen/components/photo_card.dart';
+import 'package:flutter_movie/logic/cubits/videos_movie/videos_movie_cubit.dart';
+import 'package:flutter_movie/peresentation/screens/details_screen/components/cast_crew_list.dart';
+import 'package:flutter_movie/peresentation/screens/details_screen/components/photo_list.dart';
 import 'package:flutter_movie/peresentation/screens/video_screen/video_screen.dart';
-import 'package:flutter_movie/data/services/movie_api_services.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/title_with_text_btn.dart';
 import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -33,9 +32,9 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   @override
   void initState() {
-    //_fetchCast();
-    //_fetchCrew();
-    //_fetchPhotos();
+    _fetchCast();
+    _fetchCrew();
+    _fetchPhotos();
     _fetchVideos();
     super.initState();
   }
@@ -53,8 +52,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   void _fetchVideos() {
-    MovieApiServices api = MovieApiServices(dio: Dio());
-    api.fetchMovieVideos(widget.movie.id);
+    context.read<VideosMovieCubit>().fetchYouTubeMovieIds(widget.movie.id);
   }
 
   @override
@@ -63,11 +61,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return SafeArea(
       child: Scaffold(
         body: PageView(
+          allowImplicitScrolling: true,
           scrollDirection: Axis.vertical,
-          //physics: const BouncingScrollPhysics(),
           children: [
-            Page2(size),
             Page1(context, size),
+            Page2(size),
           ],
         ),
       ),
@@ -98,7 +96,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       //make black filter bg
       FadeIn(
         duration: const Duration(milliseconds: 1000),
-        delay: const Duration(milliseconds: 1000),
+        delay: const Duration(milliseconds: 500),
         child: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -129,35 +127,38 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     Icons.arrow_back_ios_rounded,
                     color: Colors.white,
                   )))),
-      Positioned(
-          top: size.height / 8,
-          left: 0,
-          right: 0,
-          child: FadeInDownBig(delay: Duration(seconds: 1), child: Body(size))),
+      Positioned(top: 0, left: 0, right: 0, child: BodyPage1(size)),
     ]);
   }
 
-  Widget Body(Size size) {
+  Widget BodyPage1(Size size) {
     return SizedBox(
       height: size.height,
       child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: MyDimens.small),
-            child: Text(
-              widget.movie.title,
-              style: MyTextStyles.titleSecondary,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
+          SizedBox(height: size.height/7,),
+          FadeInDown(
+            delay: const Duration(milliseconds: 1000),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: MyDimens.small),
+              child: Text(
+                widget.movie.title,
+                style: MyTextStyles.titleSecondary,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
           SizedBox(
             height: MyDimens.small,
           ),
-          Text(
-            '${millisToHourAndMin(widget.movie.runtime)} | R',
-            style: MyTextStyles.subTitleSecondary,
+          FadeInDown(
+            delay: const Duration(milliseconds: 1100),
+            child: Text(
+              '${millisToHourAndMin(widget.movie.runtime)} | R',
+              style: MyTextStyles.subTitleSecondary,
+            ),
           ),
           SizedBox(
             height: MyDimens.small,
@@ -166,11 +167,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
             builder: (BuildContext context, state) {
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: MyDimens.small),
-                child: Text(
-                  getGenreNames(widget.movie.genreIds, state.genres).join(', '),
-                  style: MyTextStyles.subTitleSecondary,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                child: FadeInDown(
+                  delay: const Duration(milliseconds: 1200),
+                  child: Text(
+                    getGenreNames(widget.movie.genreIds, state.genres)
+                        .join(', '),
+                    style: MyTextStyles.subTitleSecondary,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               );
             },
@@ -178,107 +183,121 @@ class _DetailsScreenState extends State<DetailsScreen> {
           SizedBox(
             height: MyDimens.small,
           ),
-          RatingBar(
-              itemSize: 20,
-              initialRating: widget.movie.voteAverage! / 2,
-              minRating: 0,
-              maxRating: 10,
-              direction: Axis.horizontal,
-              allowHalfRating: true,
-              itemCount: 5,
-              //unratedColor: MyColors.primaryColor,
-              glowColor: MyColors.primaryColor,
-              //unratedColor: MyColors.cardBgColor,
-              ratingWidget: RatingWidget(
-                full: const Icon(
-                  Icons.star,
-                  color: MyColors.primaryColor,
+          FadeInDown(
+            delay: const Duration(milliseconds: 1300),
+            child: RatingBar(
+                itemSize: 20,
+                initialRating: widget.movie.voteAverage! / 2,
+                minRating: 0,
+                maxRating: 10,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                //unratedColor: MyColors.primaryColor,
+                glowColor: MyColors.primaryColor,
+                //unratedColor: MyColors.cardBgColor,
+                ratingWidget: RatingWidget(
+                  full: const Icon(
+                    Icons.star,
+                    color: MyColors.primaryColor,
+                  ),
+                  half: const Icon(
+                    Icons.star_half_outlined,
+                    color: MyColors.primaryColor,
+                  ),
+                  empty: const Icon(
+                    Icons.star_border_outlined,
+                    color: MyColors.primaryColor,
+                  ),
                 ),
-                half: const Icon(
-                  Icons.star_half_outlined,
-                  color: MyColors.primaryColor,
-                ),
-                empty: const Icon(
-                  Icons.star_border_outlined,
-                  color: MyColors.primaryColor,
-                ),
-              ),
-              onRatingUpdate: (_) {}),
+                onRatingUpdate: (_) {}),
+          ),
           SizedBox(
             height: MyDimens.small,
           ),
-          Text(
-            widget.movie.releaseDate ?? "",
-            style: MyTextStyles.subTitleSecondary,
+          FadeInDown(
+            delay: const Duration(milliseconds: 1400),
+            child: Text(
+              widget.movie.releaseDate ?? "",
+              style: MyTextStyles.subTitleSecondary,
+            ),
           ),
           const SizedBox(
             height: 64,
           ),
-          Padding(
-            padding: EdgeInsets.only(left: MyDimens.small),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Overview',
-                style: MyTextStyles.title,
+          FadeInDown(
+            delay: const Duration(milliseconds: 1500),
+            child: Padding(
+              padding: EdgeInsets.only(left: MyDimens.small),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Overview',
+                  style: MyTextStyles.title,
+                ),
               ),
             ),
           ),
           SizedBox(
             height: MyDimens.small,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: MyDimens.medium),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: ExpandableText(
-                widget.movie.overview,
-                expandText: 'show more',
-                collapseText: 'show less',
-                maxLines: 3,
-                linkEllipsis: false,
-                linkColor: MyColors.primaryColor,
-                linkStyle: MyTextStyles.title.copyWith(fontSize: 15),
-                style: MyTextStyles.body
-                    .copyWith(color: Colors.white.withOpacity(0.8)),
+          FadeInDown(
+            delay: const Duration(milliseconds: 1600),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: MyDimens.medium),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: ExpandableText(
+                  widget.movie.overview,
+                  expandText: 'show more',
+                  collapseText: 'show less',
+                  maxLines: 3,
+                  linkEllipsis: false,
+                  linkColor: MyColors.primaryColor,
+                  linkStyle: MyTextStyles.title.copyWith(fontSize: 15),
+                  style: MyTextStyles.body
+                      .copyWith(color: Colors.white.withOpacity(0.8)),
+                ),
               ),
             ),
           ),
           SizedBox(
-            height: size.height / 5,
+            height: size.height / 8,
           ),
-          TitleWithTextBtn(
-            onPressed: () {},
-            title: 'Cast & Crew',
+          FadeInUp(
+            delay: const Duration(milliseconds: 2000),
+            child: TitleWithTextBtn(
+              onPressed: () {},
+              title: 'Cast & Crew',
+            ),
           ),
-          SizedBox(height: 70, child: CastAndCrewListWidget()),
-          const SizedBox(
-            height: 32,
+          SizedBox(
+              height: size.height / 10,
+              child: FadeInUp(
+                  delay: const Duration(milliseconds: 2100),
+                  child: const CastAndCrewListWidget())),
+          SizedBox(
+            height: size.height/8,
           )
         ],
       ),
     );
   }
 
-  Container Page2(Size size) {
+  Widget Page2(Size size) {
     return Container(
       height: size.height,
       color: MyColors.bgColor,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(
-            height: 32,
-          ),
           TitleWithTextBtn(
             onPressed: () {},
             title: 'Photos',
           ),
-          FadeInDown(
-            duration: const Duration(milliseconds: 1000),
-            child: SizedBox(
-              height: size.width / 3,
-              child: const PhotoList(),
-            ),
+          SizedBox(
+            height: size.width / 2,
+            child: const PhotoList(),
           ),
           const SizedBox(
             height: 32,
@@ -287,150 +306,49 @@ class _DetailsScreenState extends State<DetailsScreen> {
             onPressed: () {},
             title: 'Videos',
           ),
-          FadeInDown(
-            from: 300,
-            duration: const Duration(milliseconds: 1000),
-            delay: const Duration(microseconds: 2000),
-            child: SizedBox(
-              height: size.width / 3,
-              child: ListView.builder(
-                itemBuilder: ((context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 200,
-                      height: 100,
-                      child: VideoScreen(videoId: 'iLnmTe5Q2Qw'),
-                    ),
-                  );
-                }),
-                itemCount: 20,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-              ),
-            ),
-          ),
-          
+          SizedBox(
+              height: size.width / 2, child: const VideosListWidget()),
         ],
       ),
     );
   }
 }
 
-class PhotoList extends StatelessWidget {
-  const PhotoList({super.key});
+
+class VideosListWidget extends StatelessWidget {
+  const VideosListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PhotosMovieCubit, PhotosMoviesStates>(
+    var size = MediaQuery.of(context).size;
+    return BlocBuilder<VideosMovieCubit, VideosMovieState>(
       builder: (context, state) {
         Widget widget = const SizedBox.shrink();
-        if (state.status == PhotosStatus.initial) {
+        if (state.status == VideosStatus.initial) {
           widget = const SpinKitFadingFour(color: MyColors.primaryColor);
-        } else if (state.status == PhotosStatus.loading) {
+        }
+        if (state.status == VideosStatus.loading) {
           widget = const SpinKitFadingFour(color: MyColors.primaryColor);
-        } else if (state.status == PhotosStatus.error) {
-          //TODO replace this text with another widget
+        }
+        if (state.status == VideosStatus.error) {
           widget = const Text('ERROR');
-        } else if (state.status == PhotosStatus.loaded) {
+        }
+        if (state.status == VideosStatus.loaded) {
           widget = ListView.builder(
             itemBuilder: ((context, index) {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: PhotoCard(
-                  imgUrl: state.photos[index],
-                ),
+                child: SizedBox(
+                    width: size.width / 1.5,
+                    child: VideoScreen(videoId: state.movieIds[index])),
               );
             }),
-            itemCount: state.photos.length,
+            itemCount: state.movieIds.length,
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
           );
         }
         return widget;
-      },
-    );
-  }
-}
-
-class CastAndCrewListWidget extends StatelessWidget {
-  const CastAndCrewListWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<CastMoviesCubit, CastMoviesState>(
-      builder: (context, castState) {
-        return BlocBuilder<CrewMoviesCubit, CrewMoviesState>(
-          builder: (context, crewState) {
-            Widget widget = const SizedBox.shrink();
-            if (castState.status == CastStatus.initial ||
-                crewState.status == CrewStatus.initial) {
-              //initial
-              widget = const SpinKitFadingFour(
-                color: MyColors.primaryColor,
-              );
-            } else if (castState.status == CastStatus.loading ||
-                crewState.status == CrewStatus.loading) {
-              //loading
-              widget = const SpinKitFadingFour(
-                color: MyColors.primaryColor,
-              );
-            } else if (castState.status == CastStatus.error &&
-                crewState.status == CrewStatus.error) {
-              //error
-              widget = const Text('ERROR');
-            } else if (castState.status == CastStatus.loaded ||
-                crewState.status == CrewStatus.loaded) {
-              //loaded
-              widget = ListView.builder(
-                itemBuilder: ((context, index) {
-                  if (index < castState.cast.length) {
-                    final member = castState.cast[index];
-                    return Padding(
-                      padding: EdgeInsets.fromLTRB(
-                          index == 0 ? 16 : 4,
-                          0,
-                          index ==
-                                  castState.cast.length +
-                                      crewState.crew.length -
-                                      1
-                              ? 16
-                              : 4,
-                          0),
-                      child: CastCrewCard(
-                          title: member.name ?? "unkown",
-                          subTitle: member.character ?? "unkown",
-                          imgUrl: member.imageUrl),
-                    );
-                  } else {
-                    final member =
-                        crewState.crew[index - castState.cast.length];
-                    return Padding(
-                      padding: EdgeInsets.fromLTRB(
-                          index == 0 ? 16 : 4,
-                          0,
-                          index ==
-                                  castState.cast.length +
-                                      crewState.crew.length -
-                                      1
-                              ? 16
-                              : 4,
-                          0),
-                      child: CastCrewCard(
-                          title: member.name ?? 'unkown',
-                          subTitle: member.job ?? 'unkown',
-                          imgUrl: member.imageUrl),
-                    );
-                  }
-                }),
-                itemCount: castState.cast.length + crewState.crew.length,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-              );
-            }
-            return widget;
-          },
-        );
       },
     );
   }

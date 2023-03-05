@@ -83,4 +83,13 @@ class MovieRepository {
     } catch (e) {}
     return List.empty();
   }
+
+    Future<List<String>> fetchMovieVideos(int movieId) async {
+    try {
+      final videos = await movieApiServices.fetchMovieVideos(movieId);
+      print("\nVIDEOS\n" + videos.toString());
+      return videos;
+    } catch (e) {}
+    return List.empty();
+  }
 }
