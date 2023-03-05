@@ -14,9 +14,13 @@ class PhotosMovieCubit extends Cubit<PhotosMoviesStates> {
     try {
       emit(state.copyWith(status: PhotosStatus.loading));
       final photos = await repository.fetchMoviePhotos(movieId);
-      emit(state.copyWith(status: PhotosStatus.loaded,photos: photos));
+      emit(state.copyWith(status: PhotosStatus.loaded, photos: photos));
     } catch (e) {
       emit(state.copyWith(status: PhotosStatus.error));
     }
+  }
+
+  void setItemIndex(int index) {
+    emit(state.copyWith(selectedItem: index));
   }
 }

@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
-
 
 class VideoScreen extends StatefulWidget {
   final String videoId;
 
   const VideoScreen({super.key, required this.videoId});
-
 
   @override
   State<VideoScreen> createState() => _VideoScreenState();
@@ -19,9 +17,9 @@ class VideoScreen extends StatefulWidget {
 class _VideoScreenState extends State<VideoScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   late YoutubePlayerController _controller;
-  late TextEditingController _idController;
-  late TextEditingController _seekToController;
   bool _isPlayerReady = false;
+  late PlayerState _playerState;
+  late YoutubeMetaData _videoMetaData;
 
   @override
   void initState() {
@@ -31,21 +29,28 @@ class _VideoScreenState extends State<VideoScreen> {
       flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: false,
-        disableDragSeek: false,
+        disableDragSeek: true,
         loop: false,
         isLive: false,
         forceHD: false,
         enableCaption: true,
       ),
-    )
-      ..addListener(listener);
-    _idController = TextEditingController();
-    _seekToController = TextEditingController();
+    )..addListener(listener);
+    _playerState = PlayerState.unknown;
+    _videoMetaData = const YoutubeMetaData();
   }
 
   void listener() {
     if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
-      setState(() {});
+      setState(() {
+        _playerState = _controller.value.playerState;
+        _videoMetaData = _controller.metadata;
+      });
+    }
+    if (_isPlayerReady && _controller.value.isFullScreen) {
+      setState(() {
+        
+      });
     }
   }
 
@@ -59,72 +64,57 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   void dispose() {
     _controller.dispose();
-    _idController.dispose();
-    _seekToController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      color: Colors.blue,
-      child: VisibilityDetector(
-        key: const Key("unique key"),
-        onVisibilityChanged: (info) {
-          if (info.visibleFraction == 0) {
-            _controller.pause();
-          } else {
-            _controller.value.isPlaying
-                ? _controller.play()
-                : _controller.pause();
-
-          }
+    return VisibilityDetector(
+      key: const Key("unique key"),
+      onVisibilityChanged: (info) {
+        if (info.visibleFraction == 0) {
+          _controller.pause();
+        } else {
+          _controller.value.isPlaying
+              ? _controller.play()
+              : _controller.pause();
+        }
+      },
+      child: YoutubePlayerBuilder(
+        onExitFullScreen: () {
+          // The player forces portraitUp after exiting fullscreen. This overrides the behaviour.
+          SystemChrome.setPreferredOrientations(DeviceOrientation.values);
         },
-        child: YoutubePlayerBuilder(
-          onExitFullScreen: () {
-            // The player forces portraitUp after exiting fullscreen. This overrides the behaviour.
-            SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+        onEnterFullScreen: () {
+          
+        },
+        player: YoutubePlayer(
+          controller: _controller,
+          showVideoProgressIndicator: true,
+          progressIndicatorColor: MyColors.primaryColor,
+          topActions: <Widget>[
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Text(
+                _controller.metadata.title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18.0,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ),
+          ],
+          onReady: () {
+            _isPlayerReady = true;
+            _controller.addListener(listener);
           },
-          player: YoutubePlayer(
-
-            controller: _controller,
-            showVideoProgressIndicator: true,
-            progressIndicatorColor: Colors.blueAccent,
-            topActions: <Widget>[
-              const SizedBox(width: 8.0),
-              Expanded(
-                child: Text(
-                  _controller.metadata.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.0,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-              ),
-
-            ],
-            onReady: () {
-              _controller.addListener(listener);
-            },
-            onEnded: (data) {},
-          ),
-          builder: (context, player) =>
-              Scaffold(
-                key: _scaffoldKey,
-                body:
-                ListView(
-                  children: [
-                    player,
-                  ],
-                ),
-              ),
+          onEnded: (data) {},
         ),
+        builder: (context, player) =>
+            Scaffold(key: _scaffoldKey, body: ClipRRect(borderRadius: BorderRadius.circular(8),child: player)),
       ),
     );
   }
-
-
 }

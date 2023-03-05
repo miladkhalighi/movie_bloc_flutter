@@ -269,7 +269,7 @@ class MovieApiServices {
         print('\nVIDEOS\n');
         print(videos);
         List<String> videoIds =
-            List<String>.from(videos.map((e) => e['id']));
+            List<String>.from(videos.map((e) => e['key']));
         print('\nIDS\n');
         print(videoIds);
         return videoIds;

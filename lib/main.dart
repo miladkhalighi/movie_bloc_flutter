@@ -9,12 +9,13 @@ import 'package:flutter_movie/logic/cubits/most_popular_movies/most_popular_movi
 import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart';
 import 'package:flutter_movie/logic/cubits/top_rated_movies/top_rated_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_cubit.dart';
+import 'package:flutter_movie/logic/cubits/videos_movie/videos_movie_cubit.dart';
 import 'package:flutter_movie/peresentation/screens/home_screen/home_screen.dart';
 import 'package:flutter_movie/data/services/movie_api_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -61,7 +62,11 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) =>
                 PhotosMovieCubit(repository: context.read<MovieRepository>()),
-          )
+          ),
+          BlocProvider(
+            create: ((context) =>
+                VideosMovieCubit(repository: context.read<MovieRepository>())),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
