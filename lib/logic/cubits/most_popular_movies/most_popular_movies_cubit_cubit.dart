@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_movie/data/models/movie.dart';
 import 'package:flutter_movie/data/repository/movie_repository.dart';
 import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit.dart';
@@ -38,12 +39,16 @@ class MostPopularMoviesCubit extends Cubit<MostPoularMoviesState> {
           emit(state.copyWith(
               status: MostPupularMoviesStatus.loaded, movies: movies));
         } else {
-            emit(state.copyWith(status: MostPupularMoviesStatus.error));
+          emit(state.copyWith(status: MostPupularMoviesStatus.error));
         }
       });
     } catch (e) {
       emit(state.copyWith(status: MostPupularMoviesStatus.error));
     }
+  }
+
+  void setItemIndex(int index) {
+    emit(state.copyWith(selectedItem: index));
   }
 
   @override
