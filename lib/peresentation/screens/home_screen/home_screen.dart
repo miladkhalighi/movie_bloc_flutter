@@ -9,6 +9,7 @@ import 'package:flutter_movie/logic/cubits/top_rated_movies/top_rated_movies_cub
 import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_cubit.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/details_screen.dart';
 import 'package:flutter_movie/peresentation/screens/home_screen/components/most_popular_list.dart';
+import 'package:flutter_movie/peresentation/screens/home_screen/components/top_rated_list.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/movie_card_small.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/most_popular_card.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/title_with_text_btn.dart';
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: MyDimens.small,
                   ),
-                  TopRatedSelection(context),
+                  const TopRatedList(),
                   const SizedBox(
                     height: 24,
                   ),
@@ -95,65 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget TopRatedSelection(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return SizedBox(
-      height: (size.height / 7.25) + 16,
-      child: BlocBuilder<TopRatedMoviesCubit, TopRatedMoviesState>(
-        builder: (context, state) {
-          switch (state.status) {
-            case TopRatedStatus.initial:
-              return const SpinKitFadingFour(
-                color: MyColors.primaryColor,
-              );
-              break;
-            case TopRatedStatus.loading:
-              return const SpinKitFadingFour(
-                color: MyColors.primaryColor,
-              );
-              break;
-            case TopRatedStatus.loaded:
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: ((context, index) {
-                  var item = state.movies[index];
-                  String joinedString = getGenreNames(item.genreIds,
-                          context.read<GenreMoviesCubit>().state.genres)
-                      .join(', ');
-                  String heroTag = '${UniqueKey()}${state.movies[index].id}';
 
-                  return Padding(
-                    padding: EdgeInsets.fromLTRB(index == 0 ? 16 : 10, 8,
-                        index == state.movies.length - 1 ? 16 : 10, 8),
-                    child: MovieCardSmall(
-                      img: item.posterUrl,
-                      title: item.title,
-                      category: joinedString,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: ((context) => DetailsScreen(
-                                      movie: item,
-                                      heroTag: heroTag,
-                                    ))));
-                      },
-                      heroTag: heroTag,
-                    ),
-                  );
-                }),
-                itemCount: state.movies.length,
-              );
-              break;
-            case TopRatedStatus.error:
-              return Text('ERROR');
-              break;
-          }
-        },
-      ),
-    );
-  }
 
   Widget UpCommingSelection(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -215,5 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+
 
 
