@@ -66,29 +66,29 @@ class _HomeScreenState extends State<HomeScreen> {
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 24,
+                  SizedBox(
+                    height: size.height * 0.05,
                   ),
                   TitleWithTextBtn(onPressed: () {}, title: "Most popular"),
                   const MostPopularList(),
-                  const SizedBox(
-                    height: 48,
+                  SizedBox(
+                    height: size.height * 0.05,
                   ),
                   TitleWithTextBtn(onPressed: () {}, title: "Top Rated"),
                   SizedBox(
                     height: MyDimens.small,
                   ),
                   const TopRatedList(),
-                  const SizedBox(
-                    height: 24,
+                  SizedBox(
+                    height: size.height * 0.05,
                   ),
                   TitleWithTextBtn(onPressed: () {}, title: "Up Comming"),
                   SizedBox(
                     height: MyDimens.small,
                   ),
                   const UpCommingList(),
-                  const SizedBox(
-                    height: 24,
+                  SizedBox(
+                    height: size.height * 0.05,
                   ),
                 ],
               ),
