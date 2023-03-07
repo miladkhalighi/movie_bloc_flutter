@@ -14,11 +14,12 @@ import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart'
 import 'package:flutter_movie/logic/cubits/videos_movie/videos_movie_cubit.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/components/cast_crew_list.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/components/photo_list.dart';
-import 'package:flutter_movie/peresentation/screens/video_screen/video_screen.dart';
+import 'package:flutter_movie/peresentation/screens/details_screen/components/video_list.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/title_with_text_btn.dart';
 import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:lottie/lottie.dart';
 
 class DetailsScreen extends StatefulWidget {
   final Movie movie;
@@ -64,15 +65,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
           allowImplicitScrolling: true,
           scrollDirection: Axis.vertical,
           children: [
-            Page1(context, size),
-            Page2(size),
+            _topPage(context, size),
+            bottomPage(size),
           ],
         ),
       ),
     );
   }
 
-  Widget Page1(BuildContext context, Size size) {
+  Widget _topPage(BuildContext context, Size size) {
     return Stack(children: [
       //bg img
       Hero(
@@ -87,10 +88,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           errorWidget: (context, url, error) => ClipRRect(
               borderRadius: BorderRadius.circular(25),
-              child: const Image(
-                image: AssetImage('assets/images/img1.png'),
-                fit: BoxFit.cover,
-              )),
+              child: Container(color: MyColors.bgColor,)),
         ),
       ),
       //make black filter bg
@@ -127,11 +125,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     Icons.arrow_back_ios_rounded,
                     color: Colors.white,
                   )))),
-      Positioned(top: 0, left: 0, right: 0, child: BodyPage1(size)),
+      Positioned(top: 0, left: 0, right: 0, child: _bodyTopPage(size)),
+      Positioned(bottom: MyDimens.medium,left: 0,right: 0,child: FadeInUp(delay: const Duration(milliseconds: 2000),child: Lottie.asset('assets/lottie/swipe-up.json',height: 84)) )
     ]);
   }
 
-  Widget BodyPage1(Size size) {
+  Widget _bodyTopPage(Size size) {
     return SizedBox(
       height: size.height,
       child: Column(
@@ -284,7 +283,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget Page2(Size size) {
+  Widget bottomPage(Size size) {
     return Container(
       height: size.height,
       color: MyColors.bgColor,
@@ -307,7 +306,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             title: 'Videos',
           ),
           SizedBox(
-              height: size.width / 2, child: const VideosListWidget()),
+              height: size.width / 2, child: const VideosListWidget()), 
         ],
       ),
     );
@@ -315,41 +314,4 @@ class _DetailsScreenState extends State<DetailsScreen> {
 }
 
 
-class VideosListWidget extends StatelessWidget {
-  const VideosListWidget({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return BlocBuilder<VideosMovieCubit, VideosMovieState>(
-      builder: (context, state) {
-        Widget widget = const SizedBox.shrink();
-        if (state.status == VideosStatus.initial) {
-          widget = const SpinKitFadingFour(color: MyColors.primaryColor);
-        }
-        if (state.status == VideosStatus.loading) {
-          widget = const SpinKitFadingFour(color: MyColors.primaryColor);
-        }
-        if (state.status == VideosStatus.error) {
-          widget = const Text('ERROR');
-        }
-        if (state.status == VideosStatus.loaded) {
-          widget = ListView.builder(
-            itemBuilder: ((context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                    width: size.width / 1.5,
-                    child: VideoScreen(videoId: state.movieIds[index])),
-              );
-            }),
-            itemCount: state.movieIds.length,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-          );
-        }
-        return widget;
-      },
-    );
-  }
-}

@@ -4,6 +4,7 @@ import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/components/photo_card.dart';
 import 'package:flutter_movie/peresentation/screens/photo_view_screen/photo_view_screen.dart';
+import 'package:flutter_movie/peresentation/shared_widgets/page_not_found.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PhotoList extends StatelessWidget {
@@ -19,8 +20,7 @@ class PhotoList extends StatelessWidget {
         } else if (state.status == PhotosStatus.loading) {
           widget = const SpinKitFadingFour(color: MyColors.primaryColor);
         } else if (state.status == PhotosStatus.error) {
-          //TODO replace this text with another widget
-          widget = const Text('ERROR');
+          widget = const PageNotFound();
         } else if (state.status == PhotosStatus.loaded) {
           widget = ListView.builder(
             itemBuilder: ((context, index) {

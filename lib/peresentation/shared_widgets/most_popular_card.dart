@@ -1,8 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_movie/peresentation/shared_widgets/custom_cached_network_image.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/constants/my_dimentions.dart';
@@ -58,19 +57,7 @@ class MostPopularCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(25),
               child: Hero(
                 tag: heroTag,
-                child: CachedNetworkImage(
-                  imageUrl: img,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => const SpinKitFadingFour(
-                    color: MyColors.primaryColor,
-                  ),
-                  errorWidget: (context, url, error) => ClipRRect(
-                      borderRadius: BorderRadius.circular(25),
-                      child: const Image(
-                        image: AssetImage('assets/images/img1.png'),
-                        fit: BoxFit.cover,
-                      )),
-                ),
+                child: CustomCachedNetworkImg(imgUrl: img),
               ),
             ),
           ),

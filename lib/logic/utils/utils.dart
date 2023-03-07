@@ -12,23 +12,29 @@ String millisToHourAndMin(int? millis) {
   return "${hours}hr ${minutes}m";
 }
 
-  List<String> getGenreNames(List<int>? genreIds, List<Genre> genres) {
-    List<String> genreNames = [];
+List<String> getGenreNames(List<int>? genreIds, List<Genre> genres) {
+  List<String> genreNames = [];
 
-    if (genreIds == null) {
-      return genreNames;
-    }
-
-    for (int id in genreIds) {
-      genres.firstWhere((e) {
-        if (e.id == id) {
-          genreNames.add(e.name);
-          return true;
-        } else {
-          return false;
-        }
-      });
-    }
-
+  if (genreIds == null) {
     return genreNames;
   }
+
+  for (int id in genreIds) {
+    genres.firstWhere((e) {
+      if (e.id == id) {
+        genreNames.add(e.name);
+        return true;
+      } else {
+        return false;
+      }
+    });
+  }
+
+  return genreNames;
+}
+
+String durationToMinSec(Duration duration) {
+  int min = duration.inMinutes;
+  int sec = duration.inSeconds % 60;
+  return '$min:$sec';
+}

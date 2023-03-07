@@ -7,6 +7,7 @@ import 'package:flutter_movie/logic/cubits/most_popular_movies/most_popular_movi
 import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/details_screen.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/most_popular_card.dart';
+import 'package:flutter_movie/peresentation/shared_widgets/page_not_found.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
   class MostPopularList extends StatelessWidget {
@@ -75,8 +76,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
               ),
             );
           } else if (state.status == MostPupularMoviesStatus.error) {
-            //TODO REPLACE TEXT WITH ANOTHER WIDGET
-            return const Text('ERROR');
+            return const PageNotFound();
           } else {
             return const SizedBox.shrink();
           }

@@ -4,6 +4,7 @@ import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/logic/cubits/cast_movies/cast_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/crew_movies/crew_movies_cubit.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/components/cast_crew_card.dart';
+import 'package:flutter_movie/peresentation/shared_widgets/page_not_found.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CastAndCrewListWidget extends StatelessWidget {
@@ -31,7 +32,7 @@ class CastAndCrewListWidget extends StatelessWidget {
             } else if (castState.status == CastStatus.error &&
                 crewState.status == CrewStatus.error) {
               //error
-              widget = const Text('ERROR');
+              widget = const PageNotFound();
             } else if (castState.status == CastStatus.loaded ||
                 crewState.status == CrewStatus.loaded) {
               //loaded
