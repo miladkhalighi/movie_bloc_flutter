@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie/data/repository/movie_repository.dart';
+import 'package:flutter_movie/logic/cubits/bottom_navigation/bottom_navigation_cubit.dart';
 import 'package:flutter_movie/logic/cubits/cast_movies/cast_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/crew_movies/crew_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_c
 import 'package:flutter_movie/logic/cubits/videos_movie/videos_movie_cubit.dart';
 import 'package:flutter_movie/peresentation/screens/home_screen/home_screen.dart';
 import 'package:flutter_movie/data/services/movie_api_services.dart';
+import 'package:flutter_movie/root_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
@@ -67,6 +69,9 @@ class MyApp extends StatelessWidget {
             create: ((context) =>
                 VideosMovieCubit(repository: context.read<MovieRepository>())),
           ),
+          BlocProvider(
+            create: (context) => BottomNavigationCubit(),
+          )
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -75,7 +80,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.yellow,
             fontFamily: GoogleFonts.aclonica().fontFamily,
           ),
-          home: const HomeScreen(),
+          home: const RootScreen(),
         ),
       ),
     );
