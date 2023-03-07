@@ -6,6 +6,7 @@ import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_c
 import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/details_screen.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/movie_card_small.dart';
+import 'package:flutter_movie/peresentation/shared_widgets/page_not_found.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UpCommingList extends StatelessWidget {
@@ -61,8 +62,7 @@ class UpCommingList extends StatelessWidget {
                 itemCount: state.movies.length,
               );
             case UpCommingStatus.error:
-              //TODO REPLACE IT
-              return Text('ERROR');
+              return const PageNotFound();
           }
         },
       ),

@@ -11,7 +11,9 @@ class CastCrewCard extends StatelessWidget {
   final String imgUrl;
   const CastCrewCard({
     Key? key,
-    required this.title, required this.subTitle, required this.imgUrl,
+    required this.title,
+    required this.subTitle,
+    required this.imgUrl,
   }) : super(key: key);
 
   @override
@@ -20,6 +22,7 @@ class CastCrewCard extends StatelessWidget {
     return SizedBox(
       width: size.width / 1.8,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
             flex: 1,
@@ -30,9 +33,10 @@ class CastCrewCard extends StatelessWidget {
                 placeholder: (context, url) => const SpinKitFadingFour(
                   color: MyColors.primaryColor,
                 ),
-                errorWidget: (context, url, error) => const Image(
-                  image: AssetImage('assets/images/img2.png'),
-                  fit: BoxFit.cover,
+                errorWidget: (context, url, error) => const Icon(
+                  Icons.person_off,
+                  size: 48,
+                  color: Colors.grey,
                 ),
                 fit: BoxFit.cover,
               ),

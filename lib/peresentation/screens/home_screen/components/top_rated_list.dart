@@ -6,6 +6,7 @@ import 'package:flutter_movie/logic/cubits/top_rated_movies/top_rated_movies_cub
 import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/details_screen.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/movie_card_small.dart';
+import 'package:flutter_movie/peresentation/shared_widgets/page_not_found.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class TopRatedList extends StatelessWidget {
@@ -61,8 +62,7 @@ class TopRatedList extends StatelessWidget {
                 itemCount: state.movies.length,
               );
             case TopRatedStatus.error:
-              //TODO REPLACE TEXT WIDGET WITH ANOTHER ONE
-              return Text('ERROR');
+              return const PageNotFound();
           }
         },
       ),
