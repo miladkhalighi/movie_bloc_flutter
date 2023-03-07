@@ -51,6 +51,7 @@ dependencies:
   youtube_player_flutter: ^8.1.2
   visibility_detector: ^0.3.3
   lottie: ^2.2.0
+  bottom_navy_bar: ^6.0.0
 
 dev_dependencies:
   flutter_test:
