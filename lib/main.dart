@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_movie/constants/my_colors.dart';
+import 'package:flutter_movie/constants/my_text_styles.dart';
 import 'package:flutter_movie/data/repository/movie_repository.dart';
 import 'package:flutter_movie/logic/cubits/bottom_navigation/bottom_navigation_cubit.dart';
 import 'package:flutter_movie/logic/cubits/cast_movies/cast_movies_cubit.dart';
@@ -11,7 +13,6 @@ import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart'
 import 'package:flutter_movie/logic/cubits/top_rated_movies/top_rated_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/videos_movie/videos_movie_cubit.dart';
-import 'package:flutter_movie/peresentation/screens/home_screen/home_screen.dart';
 import 'package:flutter_movie/data/services/movie_api_services.dart';
 import 'package:flutter_movie/root_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,8 +78,22 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              hintStyle: MyTextStyles.title,
+              labelStyle: MyTextStyles.title.copyWith(color: Colors.white.withOpacity(0.85)),
+            ),
+            backgroundColor: MyColors.bgColor,
             primarySwatch: Colors.yellow,
             fontFamily: GoogleFonts.aclonica().fontFamily,
+            
           ),
           home: const RootScreen(),
         ),

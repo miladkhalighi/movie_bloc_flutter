@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/logic/cubits/bottom_navigation/bottom_navigation_cubit.dart';
 import 'package:flutter_movie/peresentation/screens/home_screen/home_screen.dart';
+import 'package:flutter_movie/peresentation/screens/search_screen/search_screen.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -40,11 +41,7 @@ class _RootScreenState extends State<RootScreen> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             const HomeScreen(),
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.red,
-            ),
+            const SearchScreen(),
             Container(
               width: 100,
               height: 100,
