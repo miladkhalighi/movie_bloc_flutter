@@ -10,6 +10,7 @@ import 'package:flutter_movie/logic/cubits/crew_movies/crew_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit.dart';
 import 'package:flutter_movie/logic/cubits/most_popular_movies/most_popular_movies_cubit_cubit.dart';
 import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart';
+import 'package:flutter_movie/logic/cubits/search_movie/search_movie_cubit.dart';
 import 'package:flutter_movie/logic/cubits/top_rated_movies/top_rated_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/videos_movie/videos_movie_cubit.dart';
@@ -72,7 +73,11 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => BottomNavigationCubit(),
-          )
+          ),
+          BlocProvider(
+            create: ((context) =>
+                SearchMovieCubit(repository: context.read<MovieRepository>())),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -88,12 +93,12 @@ class MyApp extends StatelessWidget {
                 borderSide: const BorderSide(color: Colors.grey),
               ),
               hintStyle: MyTextStyles.title,
-              labelStyle: MyTextStyles.title.copyWith(color: Colors.white.withOpacity(0.85)),
+              labelStyle: MyTextStyles.title
+                  .copyWith(color: Colors.white.withOpacity(0.85)),
             ),
             backgroundColor: MyColors.bgColor,
             primarySwatch: Colors.yellow,
             fontFamily: GoogleFonts.aclonica().fontFamily,
-            
           ),
           home: const RootScreen(),
         ),
