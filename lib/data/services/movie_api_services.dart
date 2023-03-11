@@ -11,40 +11,30 @@ class MovieApiServices {
     required this.dio,
   });
 
-  // Future<List<MovieItemModel>> getMoviesByTitle(String title) async {
-  //   try {
-  //     Response response = await dio.get("https://api.themoviedb.org/3/find/",
-  //         queryParameters: {
-  //           'api_key': MovieApiConstants.apiKey,
-  //           'query': title,
-  //           'external_source': 'imdb_id'
-  //         },
-  //         options: Options(method: "GET", responseType: ResponseType.json));
-  //     if (response.statusCode == 200) {
-  //       print(response.data.toString());
-  //       List<MovieItemModel> movies = [];
-
-  //       response.data['results']
-  //           .forEach((e) => movies.add(MovieItemModel.fromJson(e)));
-
-  //       // for (var i = 0; i < 19; i++) {
-  //       //   if (jsonBody['results'][i] != null) {
-  //       //     final MovieItemModel movie =
-  //       //         MovieItemModel.fromJson(jsonBody['results'][i]);
-  //       //     //print(movie);
-  //       //     movies.add(movie);
-  //       //   }
-  //       // }
-  //       return movies;
-  //     } else {
-  //       throw Exception(
-  //           'Request failed\nStatus code:${response.statusCode}\nReason:${response.statusMessage}');
-  //     }
-  //   } catch (e) {
-  //     print("catch err " + e.toString());
-  //   }
-  //   return [];
-  // }
+  Future<List<Movie>> getMoviesByTitle(String title) async {
+    String url = MovieApiConstants.searchMovies;
+    try {
+      Response response = await dio.get(url,
+          queryParameters: {
+            'api_key': MovieApiConstants.apiKey,
+            'query': title,
+            //'external_source': 'imdb_id'
+          },
+          options: Options(method: "GET", responseType: ResponseType.json));
+      if (response.statusCode == 200) {
+        var jsonMovies = response.data['results'];
+        List<Movie> movies =
+            List.from(jsonMovies.map((e) => Movie.fromJson(e)));
+        return movies;
+      } else {
+        throw Exception(
+            'Request failed\nStatus code:${response.statusCode}\nReason:${response.statusMessage}');
+      }
+    } catch (e) {
+      print("catch err " + e.toString());
+    }
+    return [];
+  }
 
   Future<List<Movie>> getTrendingMovies() async {
     try {
@@ -268,8 +258,7 @@ class MovieApiServices {
         final List<dynamic> videos = response.data['results'];
         print('\nVIDEOS\n');
         print(videos);
-        List<String> videoIds =
-            List<String>.from(videos.map((e) => e['key']));
+        List<String> videoIds = List<String>.from(videos.map((e) => e['key']));
         print('\nIDS\n');
         print(videoIds);
         return videoIds;

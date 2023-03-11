@@ -84,11 +84,20 @@ class MovieRepository {
     return List.empty();
   }
 
-    Future<List<String>> fetchMovieVideos(int movieId) async {
+  Future<List<String>> fetchMovieVideos(int movieId) async {
     try {
       final videos = await movieApiServices.fetchMovieVideos(movieId);
       print("\nVIDEOS\n" + videos.toString());
       return videos;
+    } catch (e) {}
+    return List.empty();
+  }
+
+  Future<List<Movie>> fetchMoviesByTitle(String title) async {
+    try {
+      final movies = await movieApiServices.getMoviesByTitle(title);
+      print("\nMOVIES SEARCH BY TITLE\n" + movies.toString());
+      return movies;
     } catch (e) {}
     return List.empty();
   }
