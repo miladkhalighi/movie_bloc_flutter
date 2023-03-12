@@ -83,6 +83,8 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
+            elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(shape: const StadiumBorder(),backgroundColor: MyColors.primaryColor)),
             inputDecorationTheme: InputDecorationTheme(
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),

@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -88,7 +89,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           errorWidget: (context, url, error) => ClipRRect(
               borderRadius: BorderRadius.circular(25),
-              child: Container(color: MyColors.bgColor,)),
+              child: Container(
+                color: MyColors.bgColor,
+              )),
         ),
       ),
       //make black filter bg
@@ -126,7 +129,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     color: Colors.white,
                   )))),
       Positioned(top: 0, left: 0, right: 0, child: _bodyTopPage(size)),
-      Positioned(bottom: MyDimens.medium,left: 0,right: 0,child: FadeInUp(delay: const Duration(milliseconds: 2000),child: Lottie.asset('assets/lottie/swipe-up.json',height: 84)) )
+      Positioned(
+          bottom: MyDimens.medium,
+          left: 0,
+          right: 0,
+          child: FadeInUp(
+              delay: const Duration(milliseconds: 2000),
+              child: Lottie.asset('assets/lottie/swipe-up.json', height: 84)))
     ]);
   }
 
@@ -135,7 +144,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
       height: size.height,
       child: Column(
         children: [
-          SizedBox(height: size.height/7,),
+          SizedBox(
+            height: size.height / 7,
+          ),
           FadeInDown(
             delay: const Duration(milliseconds: 1000),
             child: Padding(
@@ -222,8 +233,22 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),
           ),
           const SizedBox(
-            height: 64,
+            height: 20,
           ),
+          //btn
+          FadeInDown(
+            delay: const Duration(milliseconds: 1400),
+            child: SizedBox(
+                height: 48,
+                child: ElevatedButton.icon(
+                    onPressed: () {
+                      //TODO
+                      // save to local storage
+                    },
+                    icon: const Icon(EvaIcons.bookmarkOutline),
+                    label: const Text('Add to watch list'))),
+          ),
+          const Spacer(),
           FadeInDown(
             delay: const Duration(milliseconds: 1500),
             child: Padding(
@@ -260,9 +285,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ),
             ),
           ),
-          SizedBox(
-            height: size.height / 8,
-          ),
+          const Spacer(),
           FadeInUp(
             delay: const Duration(milliseconds: 2000),
             child: TitleWithTextBtn(
@@ -276,7 +299,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   delay: const Duration(milliseconds: 2100),
                   child: const CastAndCrewListWidget())),
           SizedBox(
-            height: size.height/8,
+            height: size.height / 7,
           )
         ],
       ),
@@ -305,13 +328,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
             onPressed: () {},
             title: 'Videos',
           ),
-          SizedBox(
-              height: size.width / 2, child: const VideosListWidget()), 
+          SizedBox(height: size.width / 2, child: const VideosListWidget()),
         ],
       ),
     );
   }
 }
-
-
-
