@@ -12,8 +12,9 @@ class SearchMovieCubit extends Cubit<SearchMovieState> {
       : super(SearchMovieState.initial());
 
   searchItemByTitle(String title) async {
+    emit(state.copyWith(title: title));
     if (title.length > 2) {
-      emit(state.copyWith(title: title, status: SearchStatus.loading));
+      emit(state.copyWith(status: SearchStatus.loading));
       try {
         List<Movie> movies = await repository.fetchMoviesByTitle(title);
         emit(state.copyWith(movies: movies, status: SearchStatus.loaded));
