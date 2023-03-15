@@ -12,6 +12,7 @@ import 'package:flutter_movie/logic/cubits/cast_movies/cast_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/crew_movies/crew_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit.dart';
 import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart';
+import 'package:flutter_movie/logic/cubits/save_movie/save_movie_cubit.dart';
 import 'package:flutter_movie/logic/cubits/videos_movie/videos_movie_cubit.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/components/cast_crew_list.dart';
 import 'package:flutter_movie/peresentation/screens/details_screen/components/photo_list.dart';
@@ -20,7 +21,9 @@ import 'package:flutter_movie/peresentation/shared_widgets/title_with_text_btn.d
 import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DetailsScreen extends StatefulWidget {
   final Movie movie;
@@ -38,6 +41,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     _fetchCrew();
     _fetchPhotos();
     _fetchVideos();
+    _fetchSavedMovie();
     super.initState();
   }
 
@@ -55,6 +59,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   void _fetchVideos() {
     context.read<VideosMovieCubit>().fetchYouTubeMovieIds(widget.movie.id);
+  }
+
+  void _fetchSavedMovie() {
+    context.read<SaveMovieCubit>().fetchMove(widget.movie);
   }
 
   @override
@@ -239,14 +247,31 @@ class _DetailsScreenState extends State<DetailsScreen> {
           FadeInDown(
             delay: const Duration(milliseconds: 1400),
             child: SizedBox(
-                height: 48,
-                child: ElevatedButton.icon(
-                    onPressed: () {
-                      //TODO
-                      // save to local storage
-                    },
-                    icon: const Icon(EvaIcons.bookmarkOutline),
-                    label: const Text('Add to watch list'))),
+              height: 48,
+              child: BlocBuilder<SaveMovieCubit, SaveMovieState>(
+                builder: (context, state) {
+                  return ElevatedButton.icon(
+                      onPressed: () {
+                        context
+                            .read<SaveMovieCubit>()
+                            .toggleMovie(widget.movie);
+                        print('\nFINAL LIST ${state.movies}');
+                      },
+                      icon: Icon(
+                        state.status == SavedMovieStatus.saved
+                            ? EvaIcons.bookmark
+                            : EvaIcons.bookmarkOutline,
+                        color: Colors.black54,
+                      ),
+                      label: Text(
+                        state.status == SavedMovieStatus.saved
+                            ? 'Remove from watch list'
+                            : 'Add to watch list',
+                        style: MyTextStyles.botton,
+                      ));
+                },
+              ),
+            ),
           ),
           const Spacer(),
           FadeInDown(
