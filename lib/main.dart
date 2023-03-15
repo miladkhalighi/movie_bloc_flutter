@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:flutter_movie/logic/cubits/crew_movies/crew_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit.dart';
 import 'package:flutter_movie/logic/cubits/most_popular_movies/most_popular_movies_cubit_cubit.dart';
 import 'package:flutter_movie/logic/cubits/photos_movie/photos_movie_cubit.dart';
+import 'package:flutter_movie/logic/cubits/save_movie/save_movie_cubit.dart';
 import 'package:flutter_movie/logic/cubits/search_movie/search_movie_cubit.dart';
 import 'package:flutter_movie/logic/cubits/top_rated_movies/top_rated_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_cubit.dart';
@@ -17,9 +20,19 @@ import 'package:flutter_movie/logic/cubits/videos_movie/videos_movie_cubit.dart'
 import 'package:flutter_movie/data/services/movie_api_services.dart';
 import 'package:flutter_movie/root_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final storage = await HydratedStorage.build(
+      storageDirectory: await getApplicationDocumentsDirectory());
+
+  final allData = await storage.read('SaveMovieCubit');
+  print('All stored data:');
+  print(allData);
+
+  HydratedBloc.storage = storage;
   runApp(const MyApp());
 }
 
@@ -78,13 +91,18 @@ class MyApp extends StatelessWidget {
             create: ((context) =>
                 SearchMovieCubit(repository: context.read<MovieRepository>())),
           ),
+          BlocProvider(create: (context) {
+            return SaveMovieCubit();
+          })
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Flutter Demo',
           theme: ThemeData(
             elevatedButtonTheme: ElevatedButtonThemeData(
-                style: ElevatedButton.styleFrom(shape: const StadiumBorder(),backgroundColor: MyColors.primaryColor)),
+                style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    backgroundColor: MyColors.primaryColor)),
             inputDecorationTheme: InputDecorationTheme(
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
