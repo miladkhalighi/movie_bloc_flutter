@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
@@ -19,54 +20,56 @@ class CastCrewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return SizedBox(
-      width: size.width / 1.8,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            flex: 1,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(1000),
-              child: CachedNetworkImage(
-                imageUrl: imgUrl,
-                placeholder: (context, url) => const SpinKitFadingFour(
-                  color: MyColors.primaryColor,
+    return ZoomIn(
+      child: SizedBox(
+        width: size.width / 1.8,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 1,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(1000),
+                child: CachedNetworkImage(
+                  imageUrl: imgUrl,
+                  placeholder: (context, url) => const SpinKitFadingFour(
+                    color: MyColors.primaryColor,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.person_off,
+                    size: 48,
+                    color: Colors.grey,
+                  ),
+                  fit: BoxFit.cover,
                 ),
-                errorWidget: (context, url, error) => const Icon(
-                  Icons.person_off,
-                  size: 48,
-                  color: Colors.grey,
-                ),
-                fit: BoxFit.cover,
               ),
             ),
-          ),
-          SizedBox(
-            width: MyDimens.small,
-          ),
-          Expanded(
-            flex: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: MyTextStyles.title.copyWith(fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-                Text(
-                  subTitle,
-                  style: MyTextStyles.subTitle.copyWith(fontSize: 12),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ],
+            SizedBox(
+              width: MyDimens.small,
             ),
-          )
-        ],
+            Expanded(
+              flex: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: MyTextStyles.title.copyWith(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                  Text(
+                    subTitle,
+                    style: MyTextStyles.subTitle.copyWith(fontSize: 12),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

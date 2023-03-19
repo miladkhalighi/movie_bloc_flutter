@@ -1,10 +1,8 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/constants/my_text_styles.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/custom_cached_network_image.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MovieCardSmall extends StatelessWidget {
   const MovieCardSmall({
@@ -14,6 +12,7 @@ class MovieCardSmall extends StatelessWidget {
     required this.title,
     required this.category,
     required this.onPressed,
+    this.expandWidth = false,
   }) : super(key: key);
 
   final Function() onPressed;
@@ -21,6 +20,7 @@ class MovieCardSmall extends StatelessWidget {
   final String img;
   final String title;
   final String category;
+  final bool expandWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class MovieCardSmall extends StatelessWidget {
       onTap: onPressed,
       child: ZoomIn(
         child: Container(
-          width: size.width / 1.973,
+          width: expandWidth ? size.width : size.width / 1.973,
           height: size.height / 7.25,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),

@@ -146,6 +146,7 @@ class _SearchScreenState extends State<SearchScreen> {
         opacity: state.showAppbar ? 1 : 0,
         duration: const Duration(milliseconds: 500),
         child: AppBar(
+          elevation:0,
           toolbarHeight: double.maxFinite,
           backgroundColor: MyColors.bgColor,
           title: TextField(
