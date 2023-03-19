@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
@@ -7,15 +6,11 @@ import 'package:flutter_movie/logic/cubits/genre_movies/genre_movies_cubit_cubit
 import 'package:flutter_movie/logic/cubits/most_popular_movies/most_popular_movies_cubit_cubit.dart';
 import 'package:flutter_movie/logic/cubits/top_rated_movies/top_rated_movies_cubit.dart';
 import 'package:flutter_movie/logic/cubits/up_comming_movies/up_comming_movies_cubit.dart';
-import 'package:flutter_movie/peresentation/screens/details_screen/details_screen.dart';
 import 'package:flutter_movie/peresentation/screens/home_screen/components/most_popular_list.dart';
+import 'package:flutter_movie/peresentation/screens/home_screen/components/see_all_list.dart';
 import 'package:flutter_movie/peresentation/screens/home_screen/components/top_rated_list.dart';
 import 'package:flutter_movie/peresentation/screens/home_screen/components/up_comming_list.dart';
-import 'package:flutter_movie/peresentation/shared_widgets/movie_card_small.dart';
-import 'package:flutter_movie/peresentation/shared_widgets/most_popular_card.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/title_with_text_btn.dart';
-import 'package:flutter_movie/logic/utils/utils.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -34,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _fetchTopRated();
     _fetchUpComming();
   }
-
 
   void _fetchGenres() async {
     context.read<GenreMoviesCubit>().fetchGenres();
@@ -69,12 +62,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: size.height * 0.05,
                   ),
-                  TitleWithTextBtn(onPressed: () {}, title: "Most popular"),
+                  TitleWithTextBtn(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SeeAll(
+                                    movies: context
+                                        .watch<MostPopularMoviesCubit>()
+                                        .state
+                                        .movies)));
+                      },
+                      title: "Most popular"),
                   const MostPopularList(),
                   SizedBox(
                     height: size.height * 0.05,
                   ),
-                  TitleWithTextBtn(onPressed: () {}, title: "Top Rated"),
+                  TitleWithTextBtn(onPressed: () {
+                                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SeeAll(
+                                    movies: context
+                                        .watch<TopRatedMoviesCubit>()
+                                        .state
+                                        .movies)));
+                  }, title: "Top Rated"),
                   SizedBox(
                     height: MyDimens.small,
                   ),
@@ -82,7 +95,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: size.height * 0.05,
                   ),
-                  TitleWithTextBtn(onPressed: () {}, title: "Up Comming"),
+                  TitleWithTextBtn(onPressed: () {
+                                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SeeAll(
+                                    movies: context
+                                        .watch<UpCommingMoviesCubit>()
+                                        .state
+                                        .movies)));
+                  }, title: "Up Comming"),
                   SizedBox(
                     height: MyDimens.small,
                   ),
@@ -96,6 +118,4 @@ class _HomeScreenState extends State<HomeScreen> {
           )),
     );
   }
-
 }
-

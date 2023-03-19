@@ -46,7 +46,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
                     img: state.movies[index].posterUrl,
                     title: state.movies[index].title,
                     category: joinedString,
-                    rate: state.movies[index].voteAverage! / 2 ?? 0.0,
+                    rate: state.movies[index].voteAverage! / 2,
                     selected: index == state.selectedItem ? true : false,
                     onPressed: () {
                       Navigator.push(
