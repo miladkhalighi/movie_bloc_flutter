@@ -31,6 +31,10 @@ Future<void> main() async {
   HydratedBloc.storage = storage;
   runApp(const MyApp());
 }
+//! /////////////////////////////////
+//! FOLLOW ME ON
+//! github.com/miladkhalighi
+//! ////////////////////////////////
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

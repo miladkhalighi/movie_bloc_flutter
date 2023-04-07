@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
@@ -68,6 +70,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     var size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: MyColors.bgColor,
         body: PageView(
           allowImplicitScrolling: true,
           scrollDirection: Axis.vertical,
@@ -136,7 +139,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   )))),
       Positioned(top: 0, left: 0, right: 0, child: _bodyTopPage(size)),
       Positioned(
-          bottom: MyDimens.medium,
+          bottom: 0,
           left: 0,
           right: 0,
           child: FadeInUp(
@@ -253,7 +256,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         context
                             .read<SaveMovieCubit>()
                             .toggleMovie(widget.movie);
-                        print('\nFINAL LIST ${state.movies}');
+                        log('\nFINAL LIST ${state.movies}');
                       },
                       icon: Icon(
                         state.status == SavedMovieStatus.saved
@@ -322,7 +325,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   delay: const Duration(milliseconds: 2100),
                   child: const CastAndCrewListWidget())),
           SizedBox(
-            height: size.height / 7,
+            height: size.height / 6,
           )
         ],
       ),
