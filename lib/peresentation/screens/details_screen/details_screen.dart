@@ -21,9 +21,7 @@ import 'package:flutter_movie/peresentation/shared_widgets/title_with_text_btn.d
 import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:path_provider/path_provider.dart';
 
 class DetailsScreen extends StatefulWidget {
   final Movie movie;

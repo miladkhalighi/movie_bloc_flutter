@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_movie/constants/movie_api_constants.dart';
 import 'package:flutter_movie/data/models/cast.dart';
@@ -31,7 +33,7 @@ class MovieApiServices {
             'Request failed\nStatus code:${response.statusCode}\nReason:${response.statusMessage}');
       }
     } catch (e) {
-      print("catch err " + e.toString());
+      log("catch err $e");
     }
     return [];
   }
@@ -43,7 +45,7 @@ class MovieApiServices {
       );
 
       if (response.statusCode == 200) {
-        print(response.data.toString());
+        log(response.data.toString());
         final json = response.data;
         final movies = List<Movie>.from(
             json['results'].map((movieJson) => Movie.fromJson(movieJson)));
@@ -53,7 +55,7 @@ class MovieApiServices {
             'Request failed\nStatus code:${response.statusCode}\nReason:${response.statusMessage}');
       }
     } catch (e) {
-      print("catch err " + e.toString());
+      log("catch err $e");
     }
     return List<Movie>.empty();
   }
@@ -103,7 +105,7 @@ class MovieApiServices {
         throw Exception('Failed to load movies');
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
     return List.empty();
   }
@@ -129,7 +131,7 @@ class MovieApiServices {
         throw Exception('Failed to load movies');
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
     return List.empty();
   }
@@ -155,7 +157,7 @@ class MovieApiServices {
         throw Exception('Failed to load movies');
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
     return List.empty();
   }
@@ -175,7 +177,7 @@ class MovieApiServices {
         throw Exception('get request to fetch genres failed');
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
     return List.empty();
   }
@@ -198,7 +200,7 @@ class MovieApiServices {
         throw Exception('get request to fetch cast failed');
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
     return List.empty();
   }
@@ -220,7 +222,7 @@ class MovieApiServices {
         throw Exception('get request to fetch crew failed');
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
     return List.empty();
   }
@@ -256,17 +258,15 @@ class MovieApiServices {
 
       if (response.statusCode == 200) {
         final List<dynamic> videos = response.data['results'];
-        print('\nVIDEOS\n');
-        print(videos);
+        log('\nVIDEOS\n$videos');
         List<String> videoIds = List<String>.from(videos.map((e) => e['key']));
-        print('\nIDS\n');
-        print(videoIds);
+        log('\nIDS\n$videoIds');
         return videoIds;
       } else {
         throw Exception('Failed to fetch movie videos');
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
     return List.empty();
   }

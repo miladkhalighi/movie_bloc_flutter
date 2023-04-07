@@ -1,8 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_movie/constants/my_colors.dart';
 import 'package:flutter_movie/peresentation/shared_widgets/custom_cached_network_image.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PhotoCard extends StatelessWidget {
   final String imgUrl;

@@ -28,10 +28,6 @@ Future<void> main() async {
   final storage = await HydratedStorage.build(
       storageDirectory: await getApplicationDocumentsDirectory());
 
-  final allData = await storage.read('SaveMovieCubit');
-  print('All stored data:');
-  print(allData);
-
   HydratedBloc.storage = storage;
   runApp(const MyApp());
 }

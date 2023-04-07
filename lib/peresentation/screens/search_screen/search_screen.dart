@@ -85,21 +85,22 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget ListViewSelection(SearchMovieState state) {
     var size = MediaQuery.of(context).size;
-    Widget _widget = const SizedBox.shrink();
+    Widget widget = const SizedBox.shrink();
     if (state.status == SearchStatus.initial) {
-      _widget = SizedBox(
+      widget = SizedBox(
           width: size.width,
           height: size.height / 2,
-          child: Lottie.asset(
-            'assets/lottie/astronaut.json',
-            fit: BoxFit.contain
-          ));
+          child: Lottie.asset('assets/lottie/astronaut.json',
+              fit: BoxFit.contain));
     } else if (state.status == SearchStatus.loading) {
-      _widget = const SpinKitFadingFour(color: MyColors.primaryColor,);
-    } else if (state.status == SearchStatus.error || state.movies.isEmpty && state.status!= SearchStatus.initial) {
-      _widget = const PageNotFound();
+      widget = const SpinKitFadingFour(
+        color: MyColors.primaryColor,
+      );
+    } else if (state.status == SearchStatus.error ||
+        state.movies.isEmpty && state.status != SearchStatus.initial) {
+      widget = const PageNotFound();
     } else if (state.status == SearchStatus.loaded) {
-      _widget = GridView.builder(
+      widget = GridView.builder(
         padding: EdgeInsets.all(MyDimens.small),
         controller: _scrollController,
         physics: const BouncingScrollPhysics(),
@@ -122,7 +123,7 @@ class _SearchScreenState extends State<SearchScreen> {
               img: currentItem.posterUrl,
               title: currentItem.title,
               category: joinedString,
-              rate: currentItem.voteAverage! / 2 ?? 0.0,
+              rate: currentItem.voteAverage! / 2,
               onPressed: () {
                 Navigator.push(
                     context,
@@ -136,7 +137,7 @@ class _SearchScreenState extends State<SearchScreen> {
         itemCount: state.movies.length,
       );
     }
-    return _widget;
+    return widget;
   }
 
   PreferredSize _buildAppBar(SearchMovieState state) {
@@ -146,7 +147,7 @@ class _SearchScreenState extends State<SearchScreen> {
         opacity: state.showAppbar ? 1 : 0,
         duration: const Duration(milliseconds: 500),
         child: AppBar(
-          elevation:0,
+          elevation: 0,
           toolbarHeight: double.maxFinite,
           backgroundColor: MyColors.bgColor,
           title: TextField(
@@ -170,7 +171,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 labelText: 'What are you looking for?',
                 hintText: state.title),
             onChanged: ((value) {
-                _fetchMovies(value);
+              _fetchMovies(value);
             }),
           ),
         ),

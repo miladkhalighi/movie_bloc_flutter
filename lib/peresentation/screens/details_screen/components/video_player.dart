@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_movie/constants/my_colors.dart';
-import 'package:flutter_movie/constants/my_text_styles.dart';
-import 'package:flutter_movie/logic/utils/utils.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoPlayer extends StatefulWidget {

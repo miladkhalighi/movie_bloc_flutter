@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter_movie/data/models/cast.dart';
 import 'package:flutter_movie/data/models/crew.dart';
 import 'package:flutter_movie/data/models/genre.dart';
@@ -12,7 +13,7 @@ class MovieRepository {
   Future<List<Movie>> fetchMostPoularMovies() async {
     try {
       List<Movie> movies = await movieApiServices.getMostPopularMovies();
-      print("\nMOST POPULAR MOVIES\n" + movies.toString());
+      log("\nMOST POPULAR MOVIES\n$movies");
       return movies;
     } catch (e) {
       e.toString();
@@ -23,7 +24,7 @@ class MovieRepository {
   Future<List<Movie>> fetchTopRatedMovies() async {
     try {
       List<Movie> movies = await movieApiServices.getTopRatedMovies();
-      print("\nTOP RATED MOVIES\n" + movies.toString());
+      log("\nTOP RATED MOVIES\n$movies");
       return movies;
     } catch (e) {
       e.toString();
@@ -34,7 +35,7 @@ class MovieRepository {
   Future<List<Movie>> fetchUpCommingMovies() async {
     try {
       List<Movie> movies = await movieApiServices.getUpComingMovies();
-      print("\nUP COMMING MOVIES\n" + movies.toString());
+      log("\nUP COMMING MOVIES\n$movies");
       return movies;
     } catch (e) {
       e.toString();
@@ -45,7 +46,7 @@ class MovieRepository {
   Future<List<Genre>> fetchGenres() async {
     try {
       List<Genre> genres = await movieApiServices.getGenres();
-      print("\nGENRES\n" + genres.toString());
+      log("\nGENRES\n$genres");
       return genres;
     } catch (e) {
       e.toString();
@@ -56,10 +57,10 @@ class MovieRepository {
   Future<List<Cast>> fetchCast(int movieId) async {
     try {
       var cast = await movieApiServices.getCast(movieId);
-      print("\nCAST\n" + cast.toString());
+      log("\nCAST\n$cast");
       return cast;
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       return List.empty();
     }
   }
@@ -67,10 +68,10 @@ class MovieRepository {
   Future<List<Crew>> fetchCrew(int movieId) async {
     try {
       var crew = await movieApiServices.getCrew(movieId);
-      print("\nCREW\n" + crew.toString());
+      log("\nCREW\n$crew");
       return crew;
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
       return List.empty();
     }
   }
@@ -78,7 +79,7 @@ class MovieRepository {
   Future<List<String>> fetchMoviePhotos(int movieId) async {
     try {
       final photos = await movieApiServices.fetchMovieImages(movieId);
-      print("\nPHOTOS\n" + photos.toString());
+      log("\nPHOTOS\n$photos");
       return photos;
     } catch (e) {}
     return List.empty();
@@ -87,7 +88,7 @@ class MovieRepository {
   Future<List<String>> fetchMovieVideos(int movieId) async {
     try {
       final videos = await movieApiServices.fetchMovieVideos(movieId);
-      print("\nVIDEOS\n" + videos.toString());
+      log("\nVIDEOS\n$videos");
       return videos;
     } catch (e) {}
     return List.empty();
@@ -96,7 +97,7 @@ class MovieRepository {
   Future<List<Movie>> fetchMoviesByTitle(String title) async {
     try {
       final movies = await movieApiServices.getMoviesByTitle(title);
-      print("\nMOVIES SEARCH BY TITLE\n" + movies.toString());
+      log("\nMOVIES SEARCH BY TITLE\n$movies");
       return movies;
     } catch (e) {}
     return List.empty();
